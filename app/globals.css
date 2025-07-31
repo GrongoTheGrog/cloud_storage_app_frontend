@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F5F6F7;
+  --foreground: #2E2E2E;
+  --accent: #748599;
+  --border: #D1D5DA;
+  --pdf: #C0392B;
+  --jpg: #2980B9;
+  --gif: #8E44AD;
+
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-pdf: var(--pdf);
+  --color-jpg: var(--jpg);
+  --color-gif: var(--gif);
+  --font-roboto: var(--font-roboto);
+
+}
+
+body {
+  color: var(--foreground);
+}
+
+@layer utilities {
+
+  .font-12-regular{
+    @apply font-roboto text-[12px] font-normal
+  }
+  .font-12-medium{
+    @apply font-roboto text-[12px] font-medium
+  }
+  .font-12-bold{
+    @apply font-roboto text-[12px] font-bold
+  }
+
+  .font-14-regular{
+    @apply font-roboto text-[14px] font-normal
+  }
+  .font-14-medium{
+    @apply font-roboto text-[14px] font-medium
+  }
+  .font-14-bold{
+    @apply font-roboto text-[14px] font-bold
+  }
+
+  .font-16-regular{
+    @apply font-roboto text-[16px] font-normal
+  }
+  .font-16-medium{
+    @apply font-roboto text-[16px] font-medium
+  }
+  .font-16-bold{
+    @apply font-roboto text-[16px] font-bold
+  }
+
+  .font-20-regular{
+    @apply font-roboto text-[20px] font-normal
+  }
+  .font-20-medium{
+    @apply font-roboto text-[20px] font-medium
+  }
+  .font-20-bold{
+    @apply font-roboto text-[20px] font-bold
+  }
+
+  .light-shadow{
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .box {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    @apply border-2 rounded-[5px] border-foreground p-2.5
+  }
+
+}
+
