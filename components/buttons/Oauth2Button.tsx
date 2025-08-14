@@ -25,7 +25,7 @@ const Oauth2Button = ({service}: {service: string}) => {
     }, []);
 
     return (
-        <MainButton className='light-shadow font-20-bold flex justify-center items-center gap-2 py-2' onClick={onClick}>
+        <MainButton className='light-shadow font-20-bold flex justify-center items-center gap-2 py-2' onClick={onClick} submit={false}>
             <ServiceIcon />
             {service}
         </MainButton>

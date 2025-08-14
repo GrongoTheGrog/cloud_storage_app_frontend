@@ -5,14 +5,10 @@ import { ToastContextType, ToastType } from '@/types/ToastTypes';
 import React, { useCallback, useContext, useRef, useState } from 'react'
 import { createContext } from 'react'
 
-const ToastContext = createContext<ToastContextType>({
+export const ToastContext = createContext<ToastContextType>({
     toast: null,
     setToast: () => {}
 });
-
-export const useToast = (): ToastContextType => {
-    return useContext(ToastContext);
-}
 
 const ToastProvider = ({children}: React.PropsWithChildren) => {
 

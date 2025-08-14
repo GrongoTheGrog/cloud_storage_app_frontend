@@ -1,29 +1,49 @@
 "use client"
-import { AuthContextType, AuthContextProviderType } from '@/types/AuthTypes';
-import React, { useContext, useState } from 'react'
+import axios from '@/lib/axios';
+import { AuthContextType, AuthContextProviderType, AuthType } from '@/types/AuthTypes';
+import React, { useContext, useEffect, useState } from 'react'
 import { createContext } from 'react'
 
-const AuthContext = createContext<AuthContextProviderType>({
+export const AuthContext = createContext<AuthContextProviderType>({
     auth: null,
-    setAuth: (): void => {}
+    setAuth: (): void => {},
+    setAccessToken: (): void => {}
 });
 
-export function useAuth(): AuthContextProviderType{
-    return useContext(AuthContext);
-}
-
 const AuthProvider = ({children}: React.PropsWithChildren) => {
+
 
     const [authState, setAuthState] = useState<AuthContextType>({
             username: null,
             picture: null,
             id: null,
-            email: null
+            email: null,
+            accessToken: null,
+            csrf: null
     });
+
+    useEffect(() => {
+        const storedUserInfo = localStorage.getItem("UserInfo");
+
+        if (storedUserInfo){
+            const parsed: AuthType = JSON.parse(storedUserInfo);
+            setAuthState({...parsed, accessToken: null, csrf: null});
+        } 
+
+        const fetchCsrfToken = async () => {
+            const response = await axios.get("/api/auth/getCsrfToken");
+            setAuthState(prev => ({...prev, csrf: response.data.token}))
+        }
+        fetchCsrfToken();
+    }, [])
 
     const context: AuthContextProviderType = {
         auth: authState,
-        setAuth: (auth: AuthContextType) => setAuthState(auth)
+        setAuth: (auth: AuthType, accessToken: string | null) => {
+            localStorage.setItem("UserInfo", JSON.stringify(auth, null, 2));
+            setAuthState(prev => ({...prev, ...auth, accessToken}));
+        },
+        setAccessToken: (token: string) => setAuthState(prev => ({...prev, accessToken: token}))
     }
 
     return (
