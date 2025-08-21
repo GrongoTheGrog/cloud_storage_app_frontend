@@ -10,3 +10,12 @@ export interface SignonFormState {
     password: string;
     confirmPassword: string;
 }
+
+export interface ChangePasswordFormState {
+    password: string
+    confirmPassword: string
+}
+
+export interface ResetPasswordFormState {
+    email: string
+}

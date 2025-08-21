@@ -1,8 +1,13 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
-const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+export default axios.create({
+    baseURL: BASE_URL,
     withCredentials: true
 });
 
-export default api;
+export const axiosPrivate: AxiosInstance = axios.create({
+    baseURL: BASE_URL,
+    withCredentials: true
+});
