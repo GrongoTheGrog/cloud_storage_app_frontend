@@ -36,7 +36,8 @@ export default () => {
                 email: data.email,
                 picture: data.picture, 
                 id: data.id
-            }, data.accessToken);
+            });
+            authContext.setAccessToken(data.accessToken);
 
             toast.setToast({
                 message: "Logged in successfully.",

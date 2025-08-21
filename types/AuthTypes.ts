@@ -7,11 +7,12 @@ export type AuthType = {
 
 export type AuthContextType = AuthType & {
     accessToken: string | null,
-    csrf: string | null
 }
 
 export type AuthContextProviderType = {
     auth: null | AuthContextType,
-    setAuth: (auth: AuthType, accessToken: string | null) => void,
-    setAccessToken: (token: string) => void
+    setAuth: (auth: AuthType) => void,
+    setAccessToken: (token: string) => void,
+    accessToken: string | null,
+    logout: () => void
 }

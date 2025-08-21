@@ -3,7 +3,15 @@
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-const FormTextInput = ({className, password, name, error, placeholder}: {className?: string, password: boolean, name: string, error?: string, placeholder: string}) => {
+type Props = {
+    className?: string, 
+    password: boolean, 
+    name: string, 
+    error?: string, 
+    placeholder: string | null | undefined
+}
+
+const FormTextInput = ({className, password, name, error, placeholder}: Props) => {
     const [view, setView] = useState(!password === true);
     const [input, setInput] = useState("");
     return (
@@ -15,8 +23,8 @@ const FormTextInput = ({className, password, name, error, placeholder}: {classNa
                 </button> : null}
 
                 <input 
-                    className={"rounded-[5px] py-1 bg-border px-5 font-16-medium outline-none m-0 " + className} type={view ? "text" : "password"} name={name}
-                    placeholder={placeholder}
+                    className={"input " + className} type={view ? "text" : "password"} name={name}
+                    placeholder={placeholder ? placeholder : ""}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />

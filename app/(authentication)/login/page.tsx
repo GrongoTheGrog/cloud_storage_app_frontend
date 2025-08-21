@@ -40,7 +40,7 @@ const loginPage = () => {
                 </Link>
 
 
-                <MainButton className='mt-[24px]' submit={true}>
+                <MainButton className='mt-[24px]' submit={true} centered>
                     Send
                 </MainButton>
 

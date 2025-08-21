@@ -45,7 +45,8 @@ const useSignOn = () => {
                 email: data.email,
                 id: data.id,
                 picture: data.picture
-            }, null);
+            });
+            auth.setAccessToken(data.accessToken);
 
             localStorage.setItem("ACCESS_TOKEN", data.accessToken);
             toast.setToast({

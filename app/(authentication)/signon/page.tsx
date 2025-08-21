@@ -51,7 +51,7 @@ const loginPage = () => {
                 <FormTextInput password={false} className='w-full' name='email' error={formState.email} placeholder='email@gmail.com'/>
 
 
-                <MainButton className='mt-[24px]' submit={true}>
+                <MainButton className='mt-[24px]' submit={true} centered>
                     Send
                 </MainButton>
 

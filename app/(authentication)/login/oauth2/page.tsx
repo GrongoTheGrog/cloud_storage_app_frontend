@@ -49,6 +49,8 @@ const page = () => {
         fetchCookie(code);
 
 
+        router.push("/");
+
         const auth: AuthType = {
             email,
             id: Number(id),
@@ -56,15 +58,13 @@ const page = () => {
             username
         }
 
-        authContext.setAuth(auth, null);
+        authContext.setAuth(auth);
 
         toast.setToast({
             message: "Logged in successfully.",
             status: 200,
             type: "SUCCESS"
         });
-
-        router.push("/");
     }, [])
 
 

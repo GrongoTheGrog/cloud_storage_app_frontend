@@ -7,22 +7,37 @@ export interface User {
     picture: string
 }
 
+export interface Tag {
+    user: User;
+    name: string;
+    id: number;
+    hex_color: string;
+}
+
+export interface TagJoin {
+    id: number;
+    tag: Tag
+}
+
 export interface Item {
     id: number;
     name: string;
     owner: User;
     folder: Folder;
     path: string;
-    type: string;
-    created_at: Date;
-    updated_at: Date;
+    type: "FOLDER" | "FILE";
+    created_at: string;
+    updated_at: string;
     isPublic: boolean;
-    size: number
+    size: number;
+    storedFiles: Item[];
+    fileType: MediaType
+    tagJoins: TagJoin[]
 
 }
 
 export interface Folder extends Item {
-    storedFiles: Item[]
+    storedFiles: Folder[] | File[]
 }
 
 export interface File extends Item {

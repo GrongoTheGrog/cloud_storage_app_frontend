@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 const useAxiosPrivate = () => {
     
-    const {auth, setAuth, setAccessToken} = useAuth();
+    const {auth, setAuth, setAccessToken, logout} = useAuth();
     const refresh = useRefreshToken();
     const router = useRouter();
     const toast = useToast();
@@ -15,15 +15,16 @@ const useAxiosPrivate = () => {
     useEffect(() => {
 
         const requestInterceptor = axiosPrivate.interceptors.request.use(
-            config => {
+            async config => {
                 const accessToken = auth?.accessToken;
 
+                const cookie = await window.cookieStore.get("XSRF-TOKEN");
+                const csrf = cookie;
                 if (!config.headers.Authorization) {
-                    console.log(`Attaching access token ${accessToken} to request.`);
                     config.headers.Authorization = `Bearer ${accessToken}`;
                 }
 
-                config.headers.set("X-XSRF-TOKEN", auth?.csrf);
+                config.headers["X-XSRF-TOKEN"] = csrf?.value;
 
 
                 return config;
@@ -39,7 +40,7 @@ const useAxiosPrivate = () => {
                     try{
                         prevRequest.sent = true;
                         const newAccessToken = await refresh();
-                        console.log("Access token " + newAccessToken)
+                        setAccessToken(newAccessToken);
                         prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                         return axiosPrivate(prevRequest);
                     }catch(err){
@@ -49,15 +50,13 @@ const useAxiosPrivate = () => {
                             type: "WARNING"
                         })
 
-                        setAuth({
-                            email: null,
-                            username: null,
-                            id: null,
-                            picture: null
-                        }, null);
-                        router.push("/login")
-                        console.log("Error trying to refresh.");
+                        logout();
+                        return Promise.resolve(error);
                     }
+                }
+
+                if (error.response.status === 403){
+                    router.back();
                 }
 
                 return Promise.reject(error);

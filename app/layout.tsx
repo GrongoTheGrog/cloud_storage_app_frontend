@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/ui/Footer";
 import AppContext from "@/context/AppContext";
+import Header from "@/components/ui/Header";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -19,17 +20,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-          className={`${roboto.variable} antialiased min-h-[100vh] p-0 m-0 pt-[80px]`}
-        >
-        <AppContext>
-            {children}
+    return (
+        <html lang="en">
+            <body
+                className={`${roboto.variable} antialiased min-h-[100vh] p-0 m-0 pt-[80px]`}
+                >
+                <AppContext>
+                    <Header/>
 
-            <Footer />
-        </AppContext>
-      </body>
-    </html>
-  );
+                    {children}
+                </AppContext>
+            </body>
+        </html>
+    );
 }

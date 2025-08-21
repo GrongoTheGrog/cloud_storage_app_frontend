@@ -22,13 +22,23 @@
   }
 }
 
+@keyframes spinning {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
 
 :root {
   --background: #F5F6F7;
   --foreground: #2E2E2E;
   --accent: #748599;
   --border: #D1D5DA;
-  --pdf: #C0392B;
+  --pdf: #d4183d;
   --jpg: #2980B9;
   --gif: #8E44AD;
 
@@ -96,6 +106,16 @@ body {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
   }
 
+  .medium-shadow{
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6)
+  }
+
+  .centered-position{
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   .box {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
     @apply border-2 rounded-[5px] border-foreground p-2.5
@@ -115,6 +135,15 @@ body {
 
   .error-line-form{
     @apply text-[16px] text-red-500
+  }
+
+  /*INPUT*/
+
+  .input{
+    @apply rounded-[5px] py-1 bg-border px-5 font-medium text-[16px] outline-none m-0
+  }
+  .button{
+    @apply rounded-[5px] border-2 border-foreground min-w-[140px] px-2 p-1 box-border font-bold text-[16px] transition-all duration-200 cursor-pointer hover:bg-foreground hover:text-background active:text-background active:bg-foreground
   }
 
 
@@ -139,6 +168,17 @@ body {
 
 
   /* LOADING */
+
+  .loading-animation {
+    animation: spinning 2s linear infinite;
+  }
+
+
+  /* POPUP */
+
+  .faded {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
 
 }
 
