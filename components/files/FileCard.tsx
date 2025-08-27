@@ -33,21 +33,21 @@ const FileCard = ({item, selected, onClick}: {item: Item, selected?: boolean, on
             <div className='flex flex-col justify-around w-full'>
                 <div className='flex items-center gap-4'>
                     <Icon className='size-[34px] hidden sm:block'/>
-                    <div className='flex sm:flex-col justify-between w-full'>
-                        <Link className='font-16-bold hover:underline cursor-pointer overflow-ellipsis line-clamp-1 break-all' href={link} onClick={(e) => e.stopPropagation()}>
+                    <div className='flex sm:flex-col justify-between w-full gap-2'>
+                        <Link className="h-fit sm:font-16-bold font-20-bold hover:underline cursor-pointer line-clamp-1 break-all overflow-hidden" href={link} onClick={(e) => e.stopPropagation()}>
                             {item.name}
                         </Link>
 
-                        <span className='font-14-regular'>
+                        <span className="font-14-regular whitespace-nowrap overflow-hidden text-right sm:text-left min-w-[50px]">
                             {size}
                         </span>
                     </div>
                 </div>
                 
 
-                <div className='flex sm:flex-col sm:gap-1 sm:items-start sm:mt-2 w-full gap-8 items-center'>
+                <div className='flex sm:flex-col sm:gap-1 sm:items-start sm:mt-2 w-full gap-6 items-center font-14-regular sm:font-16-regular'>
                     <div className='flex gap-2 items-center'>
-                        <UserImage src={item.owner.picture} width={24} height={24}/>
+                        <UserImage src={item.owner.picture} width={22} height={22}/>
 
                         <span className='line-clamp-1 overflow-ellipsis'>
                             {item.owner.username}

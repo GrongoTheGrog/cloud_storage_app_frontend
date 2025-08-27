@@ -9,6 +9,7 @@ const useRefreshToken = () => {
     const refresh = async () => {
         const response = await axios.get("/api/auth/refresh");
         const newAccessToken = response.data.accessToken;
+        console.log("Getting access token from refresh token...")
         setAccessToken(newAccessToken)
         return newAccessToken;
     }

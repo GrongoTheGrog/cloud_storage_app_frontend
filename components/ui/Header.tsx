@@ -17,8 +17,9 @@ const Header = () => {
         setShowPanel(false);
     }, [pathname])
 
+
     return (
-        <div className='fixed left-0 right-0 top-0 h-fit p-[20px] flex items-end z-10' onClick={() => setShowPanel(prev => !prev)}>
+        <div className='fixed left-0 right-0 top-0 h-fit p-[20px] flex items-end bg-background z-10' onClick={() => setShowPanel(prev => !prev)}>
             <div className='ml-auto flex h-fit gap-5 items-center cursor-pointer'>
 
                 {auth.auth?.id && (

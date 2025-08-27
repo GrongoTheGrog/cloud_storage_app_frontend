@@ -31,7 +31,6 @@ const PopupProvider = ({children}: Props) => {
     const pathname = usePathname();
 
     const activate = useCallback((popup: PopupInterface) => {
-        console.log(popup);
         setPopup(popup);
         setShowPopup(true);
     }, [])
