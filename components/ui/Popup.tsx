@@ -1,5 +1,5 @@
 import { PopupInterface, PopupTypes } from '@/types/PopupTypes'
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { IconType } from 'react-icons'
 import { FaTimes } from 'react-icons/fa'
 import { FaInfo } from 'react-icons/fa6'
@@ -28,6 +28,7 @@ const Popup = ({setShowPopup, popup}: Props) => {
 
     const color = popups[popup.type].color;
     const Icon = popups[popup.type].icon;
+    const [input, setInput] = useState("");
 
     return (
         <>
@@ -40,7 +41,11 @@ const Popup = ({setShowPopup, popup}: Props) => {
                     </div>
                 </div>
 
-                <span className='font-14-medium text-accent mt-[20px] mb-[25px]'>{popup.mainText}</span>
+                <span className='font-14-medium text-accent mt-[20px] mb-[15px]'>{popup.mainText}</span>
+
+                {popup.format == "INPUT" && (
+                    <input className='input !mb-[20px] !mt-[0px]' onChange={(e) => setInput(e.target.value)} value={input}/>
+                )}
 
 
                 <div className='flex ml-auto gap-2'>
@@ -48,7 +53,7 @@ const Popup = ({setShowPopup, popup}: Props) => {
                         Cancel
                     </MainButton>
 
-                    <MainButton onClick={() => popup.action()} size="SMALL" submit={false} centered color={popup.type == "DELETE" ? "RED" : "BLUE"}>
+                    <MainButton onClick={() => {popup.action(input.trim()); setShowPopup(false)}} size="SMALL" submit={false} centered color={popup.type == "DELETE" ? "RED" : "BLUE"}>
                         {popup.type == "DELETE" ? "Delete" : "Proceed"}
                     </MainButton>
                 </div>

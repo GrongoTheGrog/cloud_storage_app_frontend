@@ -4,7 +4,7 @@ type Props = {
   children: ReactNode
   className?: string
   onClick?: () => void
-  submit: boolean
+  submit?: boolean
   size?: 'MEDIUM' | 'SMALL' | 'BIG'
   color?: 'RED' | 'NORMAL' | 'BLUE'
   background?: boolean,
@@ -42,23 +42,24 @@ const MainButton = ({
     switch (color) {
       case 'RED':
         colorClass = 'text-pdf border-pdf hover:bg-pdf hover:text-background active:bg-pdf'
+        bgClass = background ? "bg-pdf text-white hover:text-pdf hover:bg-white" : ""
         break
       case 'BLUE':
         colorClass = 'text-jpg border-jpg hover:bg-jpg hover:text-background active:jpg'
+        bgClass = background ? "bg-jpg text-white hover:text-jpg hover:bg-white" : "" 
         break
       case 'NORMAL':
       default:
         colorClass = 'text-foreground border-foreground hover:bg-foreground hover:text-background active:bg-foreground'
+        bgClass = background ? "bg-foreground text-white hover:text-foreground hover:bg-white" : "" 
         break
     }
 
+    bgClass = !background ? "bg-background" : bgClass;
+
     center = centered ? 'justify-center' : ''
 
-    bgClass = background ? 'bg-foreground text-background' : '';
-
-
-
-    return `rounded-[5px] border-2 min-w-[140px] box-border font-bold transition-all duration-200 cursor-pointer flex items-center gap-3 ${sizeClass} ${colorClass} ${bgClass} ${center} ${className}`
+    return `rounded-[5px] border-2 min-w-[140px] h-fit box-border font-bold transition-all duration-200 cursor-pointer flex items-center gap-3 ${sizeClass} ${colorClass} ${bgClass} ${center} ${className}`
   }, [size, color, background, className])
 
   return (

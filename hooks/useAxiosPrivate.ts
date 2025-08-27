@@ -1,6 +1,6 @@
 
 import { useAuth, useToast } from '@/hooks/contextHooks';
-import { axiosPrivate } from '@/lib/axios';
+import axios, { axiosPrivate } from '@/lib/axios';
 import React, { useEffect } from 'react'
 import useRefreshToken from './authHooks/useRefreshToken';
 import { useRouter } from 'next/navigation';
@@ -36,13 +36,18 @@ const useAxiosPrivate = () => {
             request => request,
             async error => {
                 const prevRequest = error.config;
-                if (error.response.data.refreshNeeded && !prevRequest?.sent){
+                console.log(error)
+                if ((error.status == 403 || error.status == 401) && !prevRequest?.sent ){
                     try{
                         prevRequest.sent = true;
-                        const newAccessToken = await refresh();
-                        setAccessToken(newAccessToken);
-                        prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                        if (error.response.data.refreshNeeded){
+                            const newAccessToken = await refresh();
+                            setAccessToken(newAccessToken);
+                            prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                        }
+
                         return axiosPrivate(prevRequest);
+
                     }catch(err){
                         toast.setToast({
                             message: "Your session expired.",
@@ -50,14 +55,14 @@ const useAxiosPrivate = () => {
                             type: "WARNING"
                         })
 
+                        console.log("Logout due to invalid token.")
+
                         logout();
                         return Promise.resolve(error);
                     }
                 }
 
-                if (error.response.status === 403){
-                    router.back();
-                }
+                
 
                 return Promise.reject(error);
             }

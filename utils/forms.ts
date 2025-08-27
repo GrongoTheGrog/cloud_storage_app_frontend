@@ -4,7 +4,7 @@ import axios from "axios";
 export function throwAxiosError(error: unknown, toast: ToastContextType){
     if (axios.isAxiosError(error)){
         toast.setToast({
-            message: error.response?.data.message,
+            message: error.response?.data.message || "Error sending request to server.",
             status: error.status,
             type: "ERROR"
         })

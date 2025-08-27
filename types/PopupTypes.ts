@@ -5,8 +5,9 @@ export interface PopupInterface {
     type: PopupTypes,
     title: string,
     subtitle: string,
+    format?: "NORMAL" | "INPUT",
     mainText: string,
-    action: () => void
+    action: ((input: string) => void) | (() => void)
 }
 
 

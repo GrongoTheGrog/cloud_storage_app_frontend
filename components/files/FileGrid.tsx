@@ -40,7 +40,7 @@ const FileGrid = ({items, className, selected, setSelected}: FileGridProps) => {
     )
 
     return (
-        <div className={'flex flex-col gap-[5px] mt-[40px] sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ' + className}>    
+        <div className={'flex flex-col gap-[5px] mt-[15px] sm:mt-[40px] sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ' + className}>    
             {items.map(item => 
                 <FileCard 
                     item={item} 
