@@ -59,7 +59,7 @@ const MainButton = ({
 
     center = centered ? 'justify-center' : ''
 
-    return `rounded-[5px] border-2 min-w-[140px] h-fit box-border font-bold transition-all duration-200 cursor-pointer flex items-center gap-3 ${sizeClass} ${colorClass} ${bgClass} ${center} ${className}`
+    return `rounded-[5px] border-1 min-w-[140px] h-fit box-border font-bold transition-all duration-200 cursor-pointer flex items-center gap-3 ${sizeClass} ${colorClass} ${bgClass} ${center} ${className}`
   }, [size, color, background, className])
 
   return (

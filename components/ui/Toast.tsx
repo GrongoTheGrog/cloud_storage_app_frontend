@@ -35,7 +35,7 @@ const Toast = ({message, status, type, ref}: ToastType & {ref?: RefObject<HTMLDi
     if (!color) throw new Error("Toast type doesn't exists.");
 
     return (
-        <div ref={ref} className={"bg-background leading-[20px] h-[70px] hidden items-center gap-3 z-20 font-14-medium rounded-[5px] min-w-[300px] absolute right-[50%] translate-[50%] bottom-[120px] transition-opacity duration-300 ease-in"}>
+        <div ref={ref} className={"bg-background leading-[20px] h-[70px] hidden items-center gap-3 z-20 font-14-medium rounded-[5px] min-w-[300px] fixed right-[50%] translate-[50%] bottom-[120px] transition-opacity duration-300 ease-in"}>
             <div className={color + "h-full w-[6px] rounded-bl-[10px] rounded-tl-[10px]"}>
             </div>
 

@@ -1,11 +1,11 @@
 "use client"
 
 import MainButton from '@/components/buttons/MainButton';
-import FileCard from '@/components/files/FileCard';
 import FileGrid from '@/components/files/FileGrid';
+import ItemHeader from '@/components/files/ItemHeader';
 import QueryInputText from '@/components/files/QueryInputText';
+import RightBar from '@/components/files/RightBar';
 import Tags from '@/components/files/Tags';
-import FormTextInput from '@/components/input/FormTextInput';
 import Loading from '@/components/ui/Loading';
 import { useToast } from '@/hooks/contextHooks';
 import useCreateFolder, { useCreateFolderPopup } from '@/hooks/fileHooks/useCreateFolder';
@@ -13,10 +13,7 @@ import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/useDeleteFile';
 import useFetchFolder from '@/hooks/fileHooks/useFetchFolder';
 import usePostFile from '@/hooks/fileHooks/usePostFile';
 import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/useRenameFile';
-import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import usePopup from '@/hooks/usePopup';
-import axios from '@/lib/axios';
-import { formatSize, isColorDark } from '@/lib/FileFunctions';
 import { Folder, Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
 import Link from 'next/link';
@@ -47,8 +44,6 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
 
     const createFolder = useCreateFolder();
     const createFolderPopup = useCreateFolderPopup();
-
-
 
     const deleteFileAction = useCallback(() => {
         deleteFiles(selectedItems)
@@ -117,22 +112,6 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
         fetch();
     }, []);
 
-    const folders = useMemo(() => {
-        const folders = [];
-        let current = folder;
-        let i = 0;
-        while(current && current.id && i < 3){
-            folders.unshift(current);
-            current = current.folder;
-            i++
-        }
-        return folders;
-    }, [folder])
-
-    const size = useMemo(() => {
-        return formatSize(folder?.size);
-    }, [folder])
-
     useEffect(() => {
         if (folder?.storedFiles){
             setItems(folder.storedFiles.filter(item => item.name.includes(queryInput)));
@@ -140,48 +119,17 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
     }, [queryInput, folder])
 
 
-    return !folder ? 
-    <Loading/> :
-    (   
-        <section className='flex max-w-[1200px] mx-auto gap-[20px] pb-[500px] sm:mb-0'>
-            <section className='px-[20px] flex-1 mx-auto'>
+    return (
+        <section className='flex flex-col px-[20px] sm:flex-row max-w-[1200px] mx-auto gap-[20px] pb-[500px]'>
+            <section className='flex-1 mx-auto'>
                 <div className='flex flex-col gap-1'>
-                    <div className='flex flex-col gap-1 sm:flex-row justify-between'>
-                        <div className='flex sm:gap-[45px] gap-[15px] items-center text-[18px] sm:text-[25px font-bold]'>
-                            <Link href={"root"}>
-                                <FaFolder className='size-[25px] sm:size-[32px]'/>
-                            </Link>
 
-                            {folders.length < 3 ? null : 
-                            <Link href={folders.at(folders.length - 1)!.id.toString()}>
-                                /...
-                            </Link>}
-
-                            {folders.map(folder => 
-                                <Link href={folder.id.toString()} key={folder.id} className='font-bold'>
-                                    /{folder.name}
-                                </Link>
-                            )}
-                        </div>
-
-                        <span className='flex items-center gap-[20px] font-medium'>
-                            <span>
-                                Items: {folder?.storedFiles?.length || 0}
-                            </span>
-                            
-                            <span>
-                                Size: {size}
-                            </span>
-                        </span>
-                    </div>
-
-                    <Tags tagJoins={folder.tagJoins} className='mt-2 sm:hidden'/>
-
+                    <ItemHeader item={folder} setItem={setFolder}/>
                     
                     <div className="static flex gap-2 justify-between items-baseline bg-background p-2 rounded-[20px] mt-2">
 
                         <div className='flex gap-2 sm:flex-row flex-col w-fit'>
-                            <label htmlFor='file' className='button h-full text-center !py-[3px] flex gap-2 items-center justify-center !text-[14px]'>
+                            <label htmlFor='file' className='button !border-1 h-full text-center !py-[3px] flex gap-2 items-center justify-center !text-[14px]'>
                                 Upload file 
                                 <FaUpload/>
                             </label>
@@ -218,19 +166,11 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
                             <FaFilter className='size-[20px]'/>
                         </button>
                     </div>
-                    <FileGrid selected={selectedItems} setSelected={setSelectedItems} items={items} className='mb-[50px]'/>
+                    <FileGrid selected={selectedItems} setSelected={setSelectedItems} items={items} className='mb-[50px]' folder={folder}/>
                 </div>
             </section>
 
-            <section className='w-[200px] hidden sm:flex flex-col gap-[12px] item'>
-                <span className='font-20-bold'>
-                    Tags
-                </span>
-                <span className='font-14-regular leading-4'>
-                    Here you can attach your own custom tags.
-                </span>
-                <Tags tagJoins={folder.tagJoins}/>
-            </section>
+            <RightBar item={folder}/>
 
         </section>
     )

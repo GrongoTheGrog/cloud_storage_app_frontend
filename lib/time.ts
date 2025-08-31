@@ -1,4 +1,5 @@
-export function formatDateHour(isoString: string) {
+export function formatDateHour(isoString: string | undefined | null) {
+    if (!isoString) return null;
     const date = new Date(isoString); 
     let minutes: string | number = date.getMinutes();
     if (minutes < 10) minutes = "0" + minutes;

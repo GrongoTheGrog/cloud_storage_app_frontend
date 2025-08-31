@@ -23,7 +23,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${roboto.variable} antialiased min-h-[100vh] p-0 m-0 pt-[80px]`}
+                className={`${roboto.variable} bg-background antialiased min-h-[100vh] p-0 m-0 pt-[120px]`}
                 >
                 <AppContext>
                     <Header/>

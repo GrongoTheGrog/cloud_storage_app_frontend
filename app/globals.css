@@ -110,6 +110,14 @@ body {
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6)
   }
 
+  .hover-light-shadow{
+    transition: box-shadow 0.1s ease-in;
+  }
+
+  .hover-light-shadow:hover{
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+  }
+
   .centered-position{
     left: 50%;
     top: 50%;
@@ -140,8 +148,9 @@ body {
   /*INPUT*/
 
   .input{
-    @apply rounded-[5px] py-1 bg-border px-5 font-medium text-[16px] outline-none m-0
+    @apply rounded-[5px] py-1 bg-background border-1 border-accent px-5 font-medium text-[16px] outline-none m-0
   }
+
   .button{
     @apply rounded-[5px] border-2 border-foreground min-w-[140px] px-2 p-1 box-border font-bold text-[16px] transition-all duration-200 cursor-pointer hover:bg-foreground hover:text-background active:text-background active:bg-foreground
   }
@@ -178,6 +187,12 @@ body {
 
   .faded {
     background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* FILE HEADER */
+
+  .metadata-info{
+    @apply w-full flex flex-row sm:flex-col justify-between sm:justify-baseline items-center gap-1
   }
 
 }

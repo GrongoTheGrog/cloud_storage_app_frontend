@@ -7,7 +7,7 @@ const useRenameFile = () => {
     const toast = useToast();
     const api = useAxiosPrivate();
     
-    return async (itemId: number, newName: string): Promise<void> => {
+    return async (itemId: number | null | undefined, newName: string): Promise<void> => {
         if (!newName) {
             toast.setToast({
                 message: "You must enter a name.",

@@ -8,7 +8,7 @@ const UserImage = ({className, src, height, width, children}: {className?: strin
     return (
         <div className='relative'>
             <Image 
-                className={`rounded-[1000px] object-cover content-center aspect-square ${className}`} 
+                className={`rounded-[1000px] w-fit object-cover content-center aspect-square ${className}`} 
                 src={image} 
                 alt="user image" 
                 width={width} 
