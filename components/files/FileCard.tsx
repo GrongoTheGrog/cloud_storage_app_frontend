@@ -12,7 +12,7 @@ import Tags from './Tags'
 
 const FileCard = ({item, selected, onClick}: {item: Item, selected?: boolean, onClick: (item: Item) => void}) => {
 
-    const selectedClass = selected ? "!border-foreground" : "";
+    const selectedClass = selected ? "!border-foreground !border-[2px]" : "";
     
     const Icon = item.type == "FILE" ? getIcon(item!.fileType) : FaFolder; 
 
@@ -28,12 +28,12 @@ const FileCard = ({item, selected, onClick}: {item: Item, selected?: boolean, on
 
     return (
         <div 
-        className={`w-full flex sm:flex-col bg-border border-[2px] sm:border-[3px] border-background px-[10px] py-[8px] rounded-[5px] gap-[10px] items-center box-border ${selectedClass}`} onClick={() => onClick(item)}>
+        className={`w-full h-fit flex sm:flex-col bg-background border-[1px] sm:border-[1px] border-accent px-[20px] py-[8px] rounded-[10px] gap-[10px] items-center box-contain hover-light-shadow cursor-pointer ${selectedClass}`} onClick={() => onClick(item)}>
             <Icon className='size-[35px] sm:hidden'/>
-            <div className='flex flex-col justify-around w-full'>
+            <div className='flex flex-col w-full'>
                 <div className='flex items-center gap-4'>
                     <Icon className='size-[34px] hidden sm:block'/>
-                    <div className='flex sm:flex-col justify-between w-full gap-2'>
+                    <div className='flex sm:flex-col justify-around w-full gap-1'>
                         <Link className="h-fit sm:font-16-bold font-20-bold hover:underline cursor-pointer line-clamp-1 break-all overflow-hidden" href={link} onClick={(e) => e.stopPropagation()}>
                             {item.name}
                         </Link>

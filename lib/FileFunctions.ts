@@ -34,7 +34,8 @@ export function getIcon(fileType: MediaType): IconType{
 }
 
 export function formatSize(size: number | undefined | null){
-    if (!size) return "0 bytes"
+    if (size === null || size === undefined) return null;
+    if (size === 0) return "0 bytes"
 
     let finalSize = size;
     let sizeUnits = ["bytes", "kb", "mb", "gb", "tb"];

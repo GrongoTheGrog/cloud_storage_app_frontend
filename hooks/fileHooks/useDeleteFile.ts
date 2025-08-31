@@ -42,8 +42,8 @@ export const useDeletePopup = () => {
     return (func: () => void) => {
         popup.activate({
             type: "DELETE",
-            title: "Delete files",
-            subtitle: "Are you sure you want to delete those files?",
+            title: "Delete file(s)",
+            subtitle: "Are you sure you want to delete that?",
             mainText: "The selected files and folders will be permanently deleted, along with any data related to them.",
             action: func
         })
