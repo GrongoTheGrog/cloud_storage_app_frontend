@@ -5,14 +5,14 @@ import FileGrid from '@/components/files/FileGrid';
 import ItemHeader from '@/components/files/ItemHeader';
 import QueryInputText from '@/components/files/QueryInputText';
 import RightBar from '@/components/files/RightBar';
-import Tags from '@/components/files/Tags';
+import Tags from '@/components/tags/Tags';
 import Loading from '@/components/ui/Loading';
 import { useToast } from '@/hooks/contextHooks';
-import useCreateFolder, { useCreateFolderPopup } from '@/hooks/fileHooks/useCreateFolder';
-import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/useDeleteFile';
-import useFetchFolder from '@/hooks/fileHooks/useFetchFolder';
-import usePostFile from '@/hooks/fileHooks/usePostFile';
-import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/useRenameFile';
+import useCreateFolder, {useCreateFolderPopup} from '@/hooks/fileHooks/folder/useCreateFolder';
+import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/file/useDeleteFile';
+import useFetchFolder from '@/hooks/fileHooks/folder/useFetchFolder';
+import usePostFile from '@/hooks/fileHooks/file/usePostFile';
+import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/file/useRenameFile';
 import usePopup from '@/hooks/usePopup';
 import { Folder, Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
@@ -159,14 +159,21 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
 
                     </div>
 
-                    <div className='mt-[20px] flex justify-around w-fit mx-auto gap-6'>
+                    <div className='mt-[20px] flex justify-between w-full mx-auto gap-6'>
                         <QueryInputText setValue={setQueryInput}/>
 
                         <button>
                             <FaFilter className='size-[20px]'/>
                         </button>
                     </div>
-                    <FileGrid selected={selectedItems} setSelected={setSelectedItems} items={items} className='mb-[50px]' folder={folder}/>
+
+                    <FileGrid 
+                        selected={selectedItems} 
+                        setSelected={setSelectedItems} 
+                        items={items} 
+                        className='mb-[50px]' 
+                        folder={folder}
+                        />
                 </div>
             </section>
 

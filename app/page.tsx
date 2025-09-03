@@ -1,9 +1,20 @@
-export default function Home() {
-  return (
-    <div className="">
+"use client";
 
-        <label htmlFor="file" className="box">Choose a file</label>
-        <input id="file" name="file"type="file" className="box hidden" placeholder="Choose your file"/>
-    </div>
-  );
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+export default function Home() {
+
+    const router = useRouter();
+
+    useEffect(() => {
+        router.push("/folders/root");
+    }, [])
+  
+
+    return (
+        <div className="">
+            Redirecting.
+        </div>
+    );
 }

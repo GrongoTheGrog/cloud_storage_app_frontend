@@ -10,6 +10,7 @@ export interface User {
 export interface Tag {
     user: User;
     name: string;
+    description: string;
     id: number;
     hex_color: string;
 }

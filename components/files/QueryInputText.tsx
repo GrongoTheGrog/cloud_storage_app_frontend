@@ -31,11 +31,11 @@ const QueryInputText = ({setValue}: Props) => {
         <div className='flex g-0'>
             <input
                 placeholder='Search file name'
-                className='input !rounded-l-[100px] sm:w-[400px] !border-r-0'
+                className='input !rounded-l-[5px] !rounded-r-[0px] sm:w-[400px] !border-r-0'
                 value={input}
                 onChange={onChange}
             />
-            <button className='px-[15px] bg-background border-1 border-accent border-l-0 rounded-r-[100px] cursor-pointer' onClick={clear}>
+            <button className='px-[15px] bg-background border-1 border-accent border-l-0 rounded-r-[5px] cursor-pointer' onClick={clear}>
                 {input.length > 0 ? <FaTimes /> : <FaSearch />}
             </button>  
         </div>

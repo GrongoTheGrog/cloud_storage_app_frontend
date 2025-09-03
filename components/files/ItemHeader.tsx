@@ -8,11 +8,11 @@ import TextSk from '../skelletons/TextSk'
 import { IconType } from 'react-icons'
 import { formatDateHour } from '@/lib/time'
 import UserImage from '../user/UserImage'
-import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/useRenameFile'
+import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/file/useRenameFile'
 import { throwAxiosError } from '@/utils/forms'
 import { useToast } from '@/hooks/contextHooks'
 import MainButton from '../buttons/MainButton'
-import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/useDeleteFile'
+import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/file/useDeleteFile'
 import { useRouter } from 'next/navigation'
 import { FaEdit } from 'react-icons/fa'
 
@@ -79,7 +79,7 @@ const ItemHeader = (props: Props) => {
 
     return (
         <div className='flex flex-col gap-4'>
-            <div className='flex justify-between'>
+            <div className='flex flex-col-reverse sm:flex-row gap-y-[15px] justify-between'>
                 <div className='flex sm:gap-[30px] gap-[15px] items-center text-[18px] sm:text-[25px font-bold] font-medium'>
                     <Link href={"/folders/root"}>
                         <FaFolder className='size-[25px] sm:size-[25px]'/>

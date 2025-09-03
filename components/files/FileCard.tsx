@@ -6,7 +6,7 @@ import { FaBusinessTime, FaClock, FaFile, FaFileImage, FaFilePdf, FaFolder } fro
 import UserImage from '../user/UserImage'
 import { formatDateHour } from '@/lib/time'
 import Link from 'next/link'
-import Tags from './Tags'
+import Tags from '../tags/Tags'
 
 
 

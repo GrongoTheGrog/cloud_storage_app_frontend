@@ -4,10 +4,10 @@ import MainButton from '@/components/buttons/MainButton';
 import ItemHeader from '@/components/files/ItemHeader';
 import Loading from '@/components/ui/Loading';
 import { useToast } from '@/hooks/contextHooks';
-import useDownloadLink from '@/hooks/fileHooks/useDownloadLink';
-import useFetchFile from '@/hooks/fileHooks/useFetchFile';
-import usePostFile from '@/hooks/fileHooks/usePostFile';
-import usePreviewLink from '@/hooks/fileHooks/usePreviewLink';
+import useDownloadLink from '@/hooks/fileHooks/file/useDownloadLink';
+import useFetchFile from '@/hooks/fileHooks/file/useFetchFile';
+import usePostFile from '@/hooks/fileHooks/file/usePostFile';
+import usePreviewLink from '@/hooks/fileHooks/file/usePreviewLink';
 import { Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
 import { link } from 'fs';
@@ -15,7 +15,7 @@ import React, { use, useCallback, useEffect, useState } from 'react'
 import { FaDownload, FaUpload } from 'react-icons/fa6';
 import { ChangeEvent } from 'react';
 import RightBar from '@/components/files/RightBar';
-import useUpdateFile from '@/hooks/fileHooks/useUpdateFile';
+import useUpdateFile from '@/hooks/fileHooks/file/useUpdateFile';
 
 
 const page = ({params}: {params: Promise<{fileId: number}>}) => {
@@ -84,7 +84,7 @@ const page = ({params}: {params: Promise<{fileId: number}>}) => {
                 <ItemHeader item={file} setItem={setFile}/>
 
                 <div className='w-full border-1 border-accent rounded-[10px] mx-auto mt-[20px]'>
-                    <div className='flex items-center justify-end gap-[20px] border-b-1 border-b-accent rounded-t-[10px] p-4 px-[40px]'>
+                    <div className='flex items-center justify-center sm:justify-end gap-[20px] border-b-1 border-b-accent rounded-t-[10px] p-4 px-[40px]'>
                         <MainButton size='SMALL' onClick={downloadAction}>
                             <FaDownload/> Download
                         </MainButton>
@@ -99,7 +99,7 @@ const page = ({params}: {params: Promise<{fileId: number}>}) => {
                     {file ? <embed 
                         src={fileLink} 
                         type={file.fileType}
-                        className='sm:w-full sm:h-[600px] mx-auto object-contain text-accent bg-background rounded-b-[10px]'
+                        className='w-full sm:w-full sm:h-[600px] mx-auto object-contain text-accent bg-background rounded-b-[10px]'
                         color='red'
                     /> : <Loading className='pw-[200px] py-[100px]'/>}
                 </div>

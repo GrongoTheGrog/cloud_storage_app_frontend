@@ -1,7 +1,6 @@
-import React from 'react'
-import usePopup from '../usePopup'
-import useAxiosPrivate from '../useAxiosPrivate'
-import { useToast } from '../contextHooks';
+import usePopup from '@/hooks/usePopup'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import { useToast } from '@/hooks/contextHooks'
 
 const useCreateFolder = () => {
 

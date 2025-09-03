@@ -1,7 +1,7 @@
 import React from 'react'
-import { useToast } from '../contextHooks'
-import useAxiosPrivate from '../useAxiosPrivate';
-import usePopup from '../usePopup';
+import { useToast } from '../../contextHooks'
+import useAxiosPrivate from '../../useAxiosPrivate';
+import usePopup from '../../usePopup';
 
 const useRenameFile = () => {
     const toast = useToast();

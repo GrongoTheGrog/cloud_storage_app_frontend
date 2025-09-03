@@ -195,5 +195,22 @@ body {
     @apply w-full flex flex-row sm:flex-col justify-between sm:justify-baseline items-center gap-1
   }
 
+
+  /* TAGS */
+
+  .tag-editing-card{
+    @apply relative flex gap-3 items-center hover:bg-border transition-colors duration-150 ease-in py-[3px] px-[10px] rounded-[5px]
+  }
+
+  .tag-delete-button{
+    @apply opacity-100 sm:opacity-0 absolute top-[6px] right-[6px] cursor-pointer transition-opacity duration-150 ease-in
+  }
+
+  @media screen and (min-width: 768px) {
+    .tag-editing-card:hover > .tag-delete-button{
+      opacity: 1;
+    }
+  }
+
 }
 
