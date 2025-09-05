@@ -63,7 +63,7 @@ const FilterContextProvider = ({children}: PropsWithChildren) => {
                 (!currentFilter.maxSize || item.size < currentFilter.maxSize * 1024 * 1024) &&
                 (!currentFilter.minSize || item.size > currentFilter.minSize * 1024 * 1024) &&
                 (!currentFilter.name || currentFilter.name === "" || item.name.includes(currentFilter.name)) &&
-                (!currentFilter.tags || item.tagJoins.some(tagJoin => currentFilter.tags?.has(tagJoin.tag.id))) &&
+                (!currentFilter.tags || currentFilter.tags.size === 0 || item.tagJoins.some(tagJoin => currentFilter.tags?.has(tagJoin.tag.id))) &&
                 (!currentFilter.users || currentFilter.users.size === 0 || item.sharedItems.some(sharedItem => 
                     currentFilter.users?.has(sharedItem.owner.id) || 
                     currentFilter.users?.has(sharedItem.user.id)

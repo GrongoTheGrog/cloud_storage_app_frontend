@@ -1,7 +1,7 @@
 import { FilterActionTypes, FilterType } from '@/types/FilterTypes';
 import React, { ActionDispatch, Dispatch, PropsWithChildren, SetStateAction, useCallback, useEffect, useState } from 'react'
 import MainButton from '../buttons/MainButton';
-import { FaClock, FaClockRotateLeft, FaFile, FaFilter, FaRegClock, FaServer, FaUser } from 'react-icons/fa6';
+import { FaClock, FaClockRotateLeft, FaFile, FaFilter, FaRegClock, FaServer, FaTag, FaUser } from 'react-icons/fa6';
 import FormTextInput from '../input/FormTextInput';
 import DatePicker from 'react-datepicker';
 
@@ -16,6 +16,7 @@ import { Tag, User } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
 import CheckBoxContent from '../input/CheckBoxContent';
 import UserImage from '../user/UserImage';
+import useFetchTags from '@/hooks/tagHooks/useFetchTags';
 
 type Props = {
     dispatchFilter: ActionDispatch<[action: FilterActionTypes]> | null,
@@ -27,6 +28,7 @@ const FilterComponent = ({currentFilter, dispatchFilter, setShowFilter}: Props) 
 
     const toast = useToast();
     const fetchSharingUsers = useSharingUsers();
+    const fetchTags = useFetchTags();
 
     const [name, setName] = useState(currentFilter.name || "");
     const [minDate, setMinDate] = useState(currentFilter.minDate);
@@ -34,13 +36,20 @@ const FilterComponent = ({currentFilter, dispatchFilter, setShowFilter}: Props) 
     const [maxSize, setMaxSize] = useState(currentFilter.maxSize || 1024);
     const [minSize, setMinSize] = useState(currentFilter.minSize || 0);
     const [users, setUsers] = useState<Set<number>>(currentFilter.users || new Set());
+    const [tags, setTags] = useState<Set<number>>(currentFilter.tags || new Set());
 
-    const [availableTags, setAvailableTags] = useState<Set<Tag>>(new Set());
+    const [availableTags, setAvailableTags] = useState<Tag[]>([]);
     const [availableUsers, setAvailableUsers] = useState<User[]>([]);
 
     useEffect(() => {
         fetchSharingUsers()
         .then(users => setAvailableUsers(users))
+        .catch(err => throwAxiosError(err, toast));
+    }, [])
+
+    useEffect(() => {
+        fetchTags()
+        .then(tags => setAvailableTags(tags))
         .catch(err => throwAxiosError(err, toast));
     }, [])
 
@@ -78,7 +87,7 @@ const FilterComponent = ({currentFilter, dispatchFilter, setShowFilter}: Props) 
             minDate, 
             maxSize,
             minSize,
-            tags: null,
+            tags,
             users
         }});
         setShowFilter(false);
@@ -163,12 +172,30 @@ const FilterComponent = ({currentFilter, dispatchFilter, setShowFilter}: Props) 
 
                     <div className='flex gap-4'>
                         {availableUsers.map(user => {
-                            console.log(user)
-                            console.log(users);
                             return (
                                 <CheckBoxContent setSelected={setUsers} value={user.id} key={user.id} preSelected={users.has(user.id)}>
                                     <UserImage src={user.picture} height={15} width={15}/>
                                     <span className='font-14-regular'>{user.username}</span>
+                                </CheckBoxContent>
+                            )
+                        })}
+                        
+                    </div>
+                </div>
+
+
+                <div className='flex flex-col gap-2'>
+                    <Title>
+                        <FaTag/>
+                        Tags
+                    </Title>
+
+                    <div className='flex gap-4'>
+                        {availableTags.map(tag => {
+                            return (
+                                <CheckBoxContent setSelected={setTags} value={tag.id} key={tag.id} preSelected={tags.has(tag.id)}>
+                                    <div style={{backgroundColor: tag.hex_color}} className='w-[15px] aspect-square rounded-full'/>
+                                    <span className='font-14-regular'>{tag.name}</span>
                                 </CheckBoxContent>
                             )
                         })}

@@ -18,7 +18,7 @@ import { FaEdit } from 'react-icons/fa'
 
 type Props = {
     item: Item | undefined | null,
-    setItem: Dispatch<SetStateAction<Item | undefined>>
+    setItem: Dispatch<SetStateAction<Item | undefined>>,
 }
 
 const ItemHeader = (props: Props) => {

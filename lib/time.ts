@@ -11,3 +11,13 @@ export function formatDateHour(isoString: string | undefined | null) {
 
     return `${hours}:${minutes} ${month}/${day}/${year}`;
 }
+
+export function formatDate(isoString: string | undefined | null){
+    if (!isoString) return null;
+    const date = new Date(isoString); 
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${month}/${day}/${year}`;
+}
