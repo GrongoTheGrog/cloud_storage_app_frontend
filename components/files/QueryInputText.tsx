@@ -3,13 +3,14 @@ import FormTextInput from '../input/FormTextInput'
 import { FaSearch, FaTimes } from 'react-icons/fa'
 
 type Props = {
-    setValue: Dispatch<SetStateAction<string>>
+    setValue: (s: string) => void,
+    value: string
 }
 
-const QueryInputText = ({setValue}: Props) => {
+const QueryInputText = ({setValue, value}: Props) => {
 
     const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState(value);
 
     const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);

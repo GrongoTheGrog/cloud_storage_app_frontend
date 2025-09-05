@@ -8,7 +8,7 @@ const useFetchFolder = () => {
     const api = useAxiosPrivate();
     const toast = useToast();
 
-    return async (folderId: string) => {
+    return async (folderId: string): Promise<Folder | void> => {
         try {
             const folder = await api.get("/api/folders/" + folderId);               
             return folder.data;

@@ -16,10 +16,11 @@ import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/file/useRen
 import usePopup from '@/hooks/usePopup';
 import { Folder, Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
-import Link from 'next/link';
-import { ChangeEvent, use, useCallback, useEffect, useMemo, useState } from 'react';
-import { FaEdit, FaSearch } from 'react-icons/fa';
-import { FaFilter, FaFolder, FaFolderPlus, FaFolderTree, FaPlus, FaTrash, FaUpload } from 'react-icons/fa6';
+import { ChangeEvent, use, useCallback, useEffect, useState } from 'react';
+import { FaEdit } from 'react-icons/fa';
+import { FaFilter, FaFolderPlus, FaTrash, FaUpload } from 'react-icons/fa6';
+import { useFilter } from '@/context/FilterContext';
+import { access } from 'fs';
 
 
 const page = ({params}: {params: Promise<{folderId: string}>}) => {
@@ -29,6 +30,10 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
     const [queryInput, setQueryInput] = useState("");
     const [items, setItems] = useState<Item[]>([]);
+    const [filteredItems, setFilteredItems] = useState<Item[]>([]);
+
+    
+    const {filter, setShowFilter, filterObject, dispatchFilter} = useFilter();
 
     const toast = useToast();
     const popup = usePopup();
@@ -58,6 +63,10 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
         })
     }, [selectedItems])
 
+    useEffect(() => {
+        setFilteredItems(filter(items));
+    }, [filterObject, items])
+
     const renameFileAction = useCallback((newName: string) => {
         const id = selectedItems.values().toArray()[0];
 
@@ -80,7 +89,6 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
     }, [selectedItems, toast, popup])
 
     const createFolderAction = useCallback((folderName: string) => {
-        console.log(folder?.id);
         const parentId = folder?.id || null;
         createFolder(folderName, parentId)
         .then((folder: Item) => {
@@ -89,10 +97,6 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
         .catch(err => throwAxiosError(err, toast));
 
     }, [popup, folder])
-
-
-
-    // POST FILE
 
     const postFileAction = (e: ChangeEvent<HTMLInputElement>) => {
         postFile(e.target.files, folderId)
@@ -107,17 +111,12 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
     useEffect(() => {
         const fetch = async () => {
             const folder = await fetchFolder(folderId);
+            if (!folder) return;
             setFolder(folder);
+            setItems(prev => folder.storedFiles)
         }
         fetch();
     }, []);
-
-    useEffect(() => {
-        if (folder?.storedFiles){
-            setItems(folder.storedFiles.filter(item => item.name.includes(queryInput)));
-        }
-    }, [queryInput, folder])
-
 
     return (
         <section className='flex flex-col px-[20px] sm:flex-row max-w-[1200px] mx-auto gap-[20px] pb-[500px]'>
@@ -160,9 +159,14 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
                     </div>
 
                     <div className='mt-[20px] flex justify-between w-full mx-auto gap-6'>
-                        <QueryInputText setValue={setQueryInput}/>
+                        <QueryInputText value={filterObject.name || ""} setValue={(s: string) => {
+                            if (!dispatchFilter) return;
+                            dispatchFilter({type: "SET_NAME", payload: s})
+                        }}/>
 
-                        <button>
+                        <button className='cursor-pointer' onClick={() => {
+                            setShowFilter && setShowFilter(true) 
+                        }}>
                             <FaFilter className='size-[20px]'/>
                         </button>
                     </div>
@@ -170,7 +174,7 @@ const page = ({params}: {params: Promise<{folderId: string}>}) => {
                     <FileGrid 
                         selected={selectedItems} 
                         setSelected={setSelectedItems} 
-                        items={items} 
+                        items={filteredItems} 
                         className='mb-[50px]' 
                         folder={folder}
                         />

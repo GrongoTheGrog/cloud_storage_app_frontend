@@ -20,6 +20,13 @@ export interface TagJoin {
     tag: Tag
 }
 
+export interface SharedItem {
+    id: number,
+    item: Item,
+    owner: User,
+    user: User
+}
+
 export interface Item {
     id: number;
     name: string;
@@ -34,6 +41,7 @@ export interface Item {
     storedFiles: Item[];
     fileType: MediaType
     tagJoins: TagJoin[]
+    sharedItems: SharedItem[]
 
 }
 
