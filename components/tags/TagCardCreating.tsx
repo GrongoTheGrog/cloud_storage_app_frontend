@@ -107,7 +107,7 @@ const TagCardCreating = ({setTags, setCreating}: Props) => {
                     <FaTimes/>
                 </MainButton>
 
-                <MainButton size='SMALL' centered color='BLUE' background className='!min-w-0 w-full' submit>
+                <MainButton size='SMALL' centered background className='!min-w-0 w-full' submit>
                     <FaCheck/>
                 </MainButton>
             </div>

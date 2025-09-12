@@ -8,49 +8,26 @@ import TextSk from '../skelletons/TextSk'
 import { IconType } from 'react-icons'
 import { formatDateHour } from '@/lib/time'
 import UserImage from '../user/UserImage'
-import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/file/useRenameFile'
+import useRenameFilePopup from '@/hooks/fileHooks/file/useRenameFile'
 import { throwAxiosError } from '@/utils/forms'
 import { useToast } from '@/hooks/contextHooks'
 import MainButton from '../buttons/MainButton'
 import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/file/useDeleteFile'
 import { useRouter } from 'next/navigation'
 import { FaEdit } from 'react-icons/fa'
+import { useItem } from '@/app/(items)/layout'
 
-type Props = {
-    item: Item | undefined | null,
-    setItem: Dispatch<SetStateAction<Item | undefined>>,
-}
+const ItemHeader = () => {
 
-const ItemHeader = (props: Props) => {
-
-    const {item, setItem} = props;
+    const {item, dispatch} = useItem();
     const toast = useToast();
     const router = useRouter();
 
     const deleteFile = useDeleteFile();
     const deleteFilePopup = useDeletePopup()
 
-    const rename = useRenameFile();
     const renamePopup = useRenameFilePopup();
 
-    
-
-    const renameAction = useCallback((newName: string) => {
-        rename(item?.id, newName)
-        .then(() => {
-            setItem(prev => {
-                console.log(prev)
-                if (prev){
-                    return {...prev, name: newName};
-                }
-                return prev;
-            })
-        })
-        .catch(err => {
-            throwAxiosError(err, toast)
-            console.error(err);
-        })
-   }, [item, setItem])
 
    const deleteAction = useCallback(() => {
         if (!item) return;
@@ -102,7 +79,7 @@ const ItemHeader = (props: Props) => {
                         <FaTrash/>
                     </MainButton>
 
-                    <MainButton size='SMALL' className='!min-w-0' onClick={() => renamePopup(renameAction)}>
+                    <MainButton size='SMALL' className='!min-w-0' onClick={() => renamePopup(item.id)}>
                         <FaEdit/>
                     </MainButton>
                 </div>}
@@ -131,7 +108,7 @@ const ItemHeader = (props: Props) => {
                         <TextSk text={item.fileType}/>
                     </div>}
 
-                    {(item != null && !item.name) && <div className='metadata-info'>
+                    {(item != null && item.id) && <div className='metadata-info'>
                         <span className='flex items-center gap-2'><FaCalendar size={14}/> Last modified:</span>
                         <TextSk text={formatDateHour(item?.updated_at)}/>
                     </div>}

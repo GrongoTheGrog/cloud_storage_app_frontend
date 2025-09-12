@@ -23,7 +23,7 @@ const TagGridEditing = ({setTags, setSelected, tags, selected, item}: Props) => 
             {creating ? (
                 <TagCardCreating setCreating={setCreating} setTags={setTags}/>
             ) : (
-                <MainButton centered size='SMALL' color='BLUE' background onClick={() => setCreating(true)}>
+                <MainButton centered size='SMALL' onClick={() => setCreating(true)}>
                     <FaPlus/> Create tag
                 </MainButton>
             )}

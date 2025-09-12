@@ -5,36 +5,33 @@ import FileGrid from '@/components/files/FileGrid';
 import ItemHeader from '@/components/files/ItemHeader';
 import QueryInputText from '@/components/files/QueryInputText';
 import RightBar from '@/components/files/RightBar';
-import Tags from '@/components/tags/Tags';
-import Loading from '@/components/ui/Loading';
 import { useToast } from '@/hooks/contextHooks';
-import useCreateFolder, {useCreateFolderPopup} from '@/hooks/fileHooks/folder/useCreateFolder';
+import useCreateFolder, {useCreateFolderPopup} from '@/hooks/fileHooks/file/useCreateFolder';
 import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/file/useDeleteFile';
-import useFetchFolder from '@/hooks/fileHooks/folder/useFetchFolder';
 import usePostFile from '@/hooks/fileHooks/file/usePostFile';
 import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/file/useRenameFile';
 import usePopup from '@/hooks/usePopup';
-import { Folder, Item } from '@/types/Entities';
+import { Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
 import { ChangeEvent, use, useCallback, useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { FaFilter, FaFolderPlus, FaTrash, FaUpload } from 'react-icons/fa6';
 import { useFilter } from '@/context/FilterContext';
-import { access } from 'fs';
 import FilterDisplay from '../ui/FilterDisplay';
+import { useItem } from '@/app/(items)/layout';
 
 type Props = {
-    folder: Folder | null | undefined;
     rightBar?: boolean;
     createItems?: boolean;
     updateItems?: boolean;
-    setFolder: Dispatch<SetStateAction<Item | undefined>>;
 }
 
-const FolderComponent = ({folder, rightBar = false, createItems = false, updateItems = false, setFolder}: Props) => {
+const FolderComponent = ({rightBar = false, createItems = false, updateItems = false}: Props) => {
+
+    const {item} = useItem();
 
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
-    const [items, setItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<Item[]>(item?.storedFiles || []);
     const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 
     
@@ -48,7 +45,6 @@ const FolderComponent = ({folder, rightBar = false, createItems = false, updateI
     const deleteFiles = useDeleteFile();
     const deleteFilesPopup = useDeletePopup();
     
-    const renameItem = useRenameFile();
     const renameItemPopup = useRenameFilePopup();
 
     const createFolder = useCreateFolder();
@@ -71,45 +67,20 @@ const FolderComponent = ({folder, rightBar = false, createItems = false, updateI
         setFilteredItems(filter(items));
     }, [filterObject, items])
 
-    useEffect(() => {
-        if (!folder) return;
-        setItems(folder?.storedFiles);
-    }, [folder])
-
-    const renameFileAction = useCallback((newName: string) => {
-        const id = selectedItems.values().toArray()[0];
-
-        renameItem(id, newName)
-        .then(() => {
-            setItems(prev => {
-                return prev.map(item => {
-                    if (item.id === id){
-                        item.name = newName;
-                    }
-
-                    return item;
-                })
-            })
-        })
-        .catch(err => {
-            throwAxiosError(err, toast);
-        })
-
-    }, [selectedItems, toast, popup])
 
     const createFolderAction = useCallback((folderName: string) => {
-        const parentId = folder?.id || null;
+        const parentId = item?.id || null;
         createFolder(folderName, parentId)
         .then((folder: Item) => {
             setItems(prev => [...prev, folder])
         }) 
         .catch(err => throwAxiosError(err, toast));
 
-    }, [popup, folder])
+    }, [popup, item])
 
     const postFileAction = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!folder) return;
-        postFile(e.target.files, folder.id.toString())
+        if (!item) return;
+        postFile(e.target.files, item.id ? item.id.toString() : "root")
             .then(file => {
                 if (file){
                     setItems(prev => [...prev, file])
@@ -118,12 +89,16 @@ const FolderComponent = ({folder, rightBar = false, createItems = false, updateI
         )
     }
 
+    useEffect(() => {
+        setItems(item?.storedFiles || []);
+    }, [item?.storedFiles])
+
     return (
-        <section className='flex flex-col px-[20px] sm:flex-row max-w-[1200px] mx-auto gap-[20px] pb-[500px]'>
+        <section className='flex flex-col px-[20px] sm:flex-row max-w-[1400px] mx-auto gap-[40px] pb-[500px]'>
             <section className='flex-1 mx-auto'>
                 <div className='flex flex-col gap-1'>
 
-                    <ItemHeader item={folder} setItem={setFolder}/>
+                    <ItemHeader/>
                     
                     <div className="static flex gap-2 justify-between items-baseline bg-background p-2 rounded-[20px] mt-2">
 
@@ -149,7 +124,7 @@ const FolderComponent = ({folder, rightBar = false, createItems = false, updateI
                             </MainButton>}
 
                             {selectedItems.size === 1 &&
-                            <MainButton submit={false} centered size='SMALL' onClick={() => renameItemPopup(renameFileAction)}>
+                            <MainButton submit={false} centered size='SMALL' onClick={() => renameItemPopup(selectedItems.values().toArray()[0])}>
                                 <span>Rename file</span>
                                 <FaEdit/>
                             </MainButton>
@@ -183,13 +158,12 @@ const FolderComponent = ({folder, rightBar = false, createItems = false, updateI
                         selected={selectedItems} 
                         setSelected={setSelectedItems} 
                         items={filteredItems} 
-                        className='mb-[50px]' 
-                        folder={folder}
+                        className='mb-[50px]'
                         />
                 </div>
             </section>
 
-            {rightBar && <RightBar item={folder}/>}
+            {rightBar && <RightBar/>}
 
         </section>
     )

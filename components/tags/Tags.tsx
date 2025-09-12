@@ -34,7 +34,7 @@ const Tags = ({item, className}: {item: Item | null | undefined, className?: str
     }, [item?.tagJoins])
 
     return (
-        <div className={'flex flex-col gap-3 text-[14px] rounded-[5px] p-3 min-h-[300px] ' + className}>
+        <div className={'flex flex-col gap-3 text-[14px] rounded-[5px] p-3 ' + className}>
             <MainButton submit={false} centered size='SMALL' onClick={() => setEditing(prev => !prev)}>
 
                 {editing ? (

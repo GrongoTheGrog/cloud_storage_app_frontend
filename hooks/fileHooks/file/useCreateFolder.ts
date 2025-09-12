@@ -34,6 +34,10 @@ export const useCreateFolderPopup = () => {
 
     const popup = usePopup();
 
+    const createFolder = async () => {
+        
+    }
+
     return (func: (folderName: string) => void) => {
         popup.activate({
             format: "INPUT",

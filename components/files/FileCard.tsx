@@ -32,9 +32,9 @@ const FileCard = ({item, selected, onClick}: {item: Item, selected?: boolean, on
             <Icon className='size-[35px] sm:hidden'/>
             <div className='flex flex-col w-full'>
                 <div className='flex items-center gap-4'>
-                    <Icon className='size-[34px] hidden sm:block'/>
+                    <Icon className='size-[30px] hidden sm:block'/>
                     <div className='flex sm:flex-col justify-around w-full gap-1'>
-                        <Link className="h-fit sm:font-16-bold font-20-bold hover:underline cursor-pointer line-clamp-1 break-all overflow-hidden" href={link} onClick={(e) => e.stopPropagation()}>
+                        <Link className="h-fit font-bold text-[18px] hover:underline cursor-pointer line-clamp-1 break-all overflow-hidden" href={link} onClick={(e) => e.stopPropagation()}>
                             {item.name}
                         </Link>
 
@@ -63,7 +63,7 @@ const FileCard = ({item, selected, onClick}: {item: Item, selected?: boolean, on
                     </span>
                 </div>
 
-                <Tags tagJoins={item.tagJoins} className='!hidden sm:flex'/>
+                <Tags item={item} className='!hidden sm:flex'/>
             </div>
         </div>
     )

@@ -32,6 +32,7 @@ const useDeleteFile = () => {
             })
         }catch(err){
             throwAxiosError(err, toast);
+            throw new Error("");
         }
     }
 }

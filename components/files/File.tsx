@@ -5,8 +5,6 @@ import ItemHeader from '@/components/files/ItemHeader';
 import Loading from '@/components/ui/Loading';
 import { useToast } from '@/hooks/contextHooks';
 import useDownloadLink from '@/hooks/fileHooks/file/useDownloadLink';
-import useFetchFile from '@/hooks/fileHooks/file/useFetchFile';
-import usePostFile from '@/hooks/fileHooks/file/usePostFile';
 import usePreviewLink from '@/hooks/fileHooks/file/usePreviewLink';
 import { Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
@@ -16,46 +14,28 @@ import { FaDownload, FaUpload } from 'react-icons/fa6';
 import { ChangeEvent } from 'react';
 import RightBar from '@/components/files/RightBar';
 import useUpdateFile from '@/hooks/fileHooks/file/useUpdateFile';
+import Error from '@/components/errors/Error';
+import { isAxiosError } from 'axios';
+import { useItem } from '@/app/(items)/layout';
 
+const FileComponent = () => {
 
-const page = ({params}: {params: Promise<{fileId: number}>}) => {
+    const {item, error, filePreviewLink} = useItem();
 
-    const {fileId} = use(params);
-    const [file, setFile] = useState<Item>();
-    const [fileLink, setFileLink] = useState();
     const toast = useToast();
 
     const fetchDownloadLink = useDownloadLink();
-    const fetchPreviewLink = usePreviewLink();
     const postFile = useUpdateFile();
 
-    const fetchFile = useFetchFile();
-
-    const fetchPreviewLinkAction = () => {
-        fetchFile(fileId)
-        .then(setFile)
-        .catch(err => throwAxiosError(err, toast));
-    }
-
-    useEffect(() => {
-        fetchPreviewLinkAction();
-    }, [fileId])
-
-    useEffect(() => {
-        fetchPreviewLink(fileId)
-        .then((link) => {
-            setFileLink(link);
-        })
-        .catch(err => throwAxiosError(err, toast))
-    }, [fileId])
+    usePreviewLink();
 
     const downloadAction = useCallback(() => {
-        if (!file) return;
-        fetchDownloadLink(fileId)
+        if (!item) return;
+        fetchDownloadLink(item.id)
         .then(downloadLink => {
             const link = document.createElement("a");
             link.href = downloadLink;
-            link.download = file?.name;
+            link.download = item?.name;
             link.style.display = "none";
             document.body.appendChild(link);
             link.click();
@@ -65,23 +45,24 @@ const page = ({params}: {params: Promise<{fileId: number}>}) => {
             console.log(err);
             throwAxiosError(err, toast)
         })
-    }, [file])
+    }, [item])
 
     const postFileAction = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         console.log("check1")
-        if (!file) return;
+        if (!item) return;
         console.log("check2")
-        postFile(e.target.files, file.id)
-            .then(() =>
-                fetchPreviewLinkAction()
-            )
+        postFile(e.target.files, item.id)
             .catch(err => throwAxiosError(err, toast))
-    }, [file])
+    }, [item])
+
+    if (error){
+        return <Error message={error}/>
+    }
 
     return (
-        <div className='flex flex-col sm:flex-row max-w-[1200px] mx-auto px-[20px] pb-[50px] gap-[20px]'>
+        <div className='flex flex-col sm:flex-row max-w-[1400px] mx-auto px-[20px] pb-[50px] gap-[40px]'>
             <div className='w-full'>
-                <ItemHeader item={file} setItem={setFile}/>
+                <ItemHeader/>
 
                 <div className='w-full border-1 border-accent rounded-[10px] mx-auto mt-[20px]'>
                     <div className='flex items-center justify-center sm:justify-end gap-[20px] border-b-1 border-b-accent rounded-t-[10px] p-4 px-[40px]'>
@@ -96,18 +77,18 @@ const page = ({params}: {params: Promise<{fileId: number}>}) => {
                         <input id='file' type="file" hidden onChange={postFileAction} />
                     </div>
 
-                    {file ? <embed 
-                        src={fileLink} 
-                        type={file.fileType}
+                    {item && filePreviewLink ? <embed 
+                        src={filePreviewLink} 
+                        type={item.fileType}
                         className='w-full sm:w-full sm:h-[600px] mx-auto object-contain text-accent bg-background rounded-b-[10px]'
                         color='red'
                     /> : <Loading className='pw-[200px] py-[100px]'/>}
                 </div>
             </div>
 
-            <RightBar item={file}/>
+            <RightBar/>
         </div>
     )
 }
 
-export default page
+export default FileComponent
