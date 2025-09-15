@@ -12,16 +12,17 @@ const usePreviewLink = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            if (!item?.id) return;
-            const response = await api.get("/api/files/preview/" + item.id);
-            dispatch({type: "SET_PREVIEW_LINK", payload: response.data});
+            try{
+                if (!item?.id) return;
+                const response = await api.get("/api/files/preview/" + item.id);
+                dispatch({type: "SET_PREVIEW_LINK", payload: response.data});
+            }catch(err){
+                throwAxiosError(err, toast);
+            }
+            
         }
 
-        try{
-            fetch();
-        }catch(err){
-            throwAxiosError(err, toast);
-        }
+        fetch();
     }, [item?.id])
 }
 

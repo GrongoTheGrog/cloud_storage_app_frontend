@@ -201,7 +201,7 @@ body {
   /* FILE HEADER */
 
   .metadata-info{
-    @apply w-full flex flex-row sm:flex-col justify-between sm:justify-baseline items-center gap-1
+    @apply w-full sm:w-fit flex flex-row sm:flex-col justify-between sm:justify-baseline items-center gap-1 
   }
 
 

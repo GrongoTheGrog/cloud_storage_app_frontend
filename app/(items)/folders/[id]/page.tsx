@@ -2,7 +2,8 @@
 
 import FolderComponent from '@/components/files/Folder';
 import useGetFolder from '@/hooks/fileHooks/file/useGetFolder';
-import React, { use } from 'react'
+import React, { use, useLayoutEffect } from 'react'
+import { useItem } from '../../layout';
 
 const page = ({params}: {params: Promise<{id: string}>}) => {
 
@@ -10,8 +11,8 @@ const page = ({params}: {params: Promise<{id: string}>}) => {
     useGetFolder(folderParams.id);
 
     return (
-        <FolderComponent rightBar/>
+        <FolderComponent rightBar createItems updateItems/>
     )
 }
 
-export default page
+export default page;

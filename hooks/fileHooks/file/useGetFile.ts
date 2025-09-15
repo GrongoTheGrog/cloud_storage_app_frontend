@@ -5,7 +5,7 @@ import { Item } from '@/types/Entities';
 import { FileRoles } from '@/types/Permissions';
 import { throwAxiosError } from '@/utils/forms';
 import { isAxiosError } from 'axios';
-import React, { ActionDispatch, useActionState, useEffect } from 'react'
+import React, { ActionDispatch, useActionState, useEffect, useLayoutEffect, useMemo } from 'react'
 
 const useGetFile = (itemId: string) => {
 
@@ -14,6 +14,7 @@ const useGetFile = (itemId: string) => {
     const {dispatch} = useItem();
 
     useEffect(() => {
+        dispatch({type: "RESET", payload: null});
         const fetch = async () => {
             try{
                 const response = await api.get("/api/files/" + itemId);

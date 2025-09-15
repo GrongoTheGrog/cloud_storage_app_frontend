@@ -6,13 +6,13 @@ import { throwAxiosError } from '@/utils/forms';
 import { useItem } from '@/app/(items)/layout';
 
 export const useRenameFilePopup = () => {
+    const popup = usePopup();
+    const toast = useToast();
+    const api = useAxiosPrivate();
+    const {dispatch, item} = useItem();
     return (itemId: number) => {
-        const popup = usePopup();
 
         const useRenameFile = async (newName: string) => {
-            const toast = useToast();
-            const api = useAxiosPrivate();
-            const {dispatch, item} = useItem();
             
             if (!newName) {
                 toast.setToast({

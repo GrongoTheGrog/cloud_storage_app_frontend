@@ -10,6 +10,7 @@ import { FaCopy } from 'react-icons/fa6';
 import { time } from 'console';
 import usePopup from '@/hooks/usePopup';
 import useItemVisibility from '@/hooks/fileHooks/file/useItemVisibility';
+import MainButton from '../buttons/MainButton';
 
 const SharingSection = ({item}: {item: Item}) => {
 
@@ -96,9 +97,9 @@ const SharingSection = ({item}: {item: Item}) => {
     return (
         <div className='flex flex-col gap-[15px] px-3'>
 
-            <button className='text-[14px] cursor-pointer border-2 border-border px-[20px] font-16-bold py-[5px] bg-border rounded-[5px] flex items-center justify-center gap-2 transition-all active:bg-background' onClick={clickCopy}>
+            <MainButton onClick={clickCopy} size='SMALL' centered className='!hover:bg-foreground'>
                 {message}
-            </button>
+            </MainButton>
 
             <div className='flex justify-between items-center'>
                 <span className='font-16-bold'>

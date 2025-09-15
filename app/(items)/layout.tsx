@@ -1,5 +1,6 @@
 "use client"
 
+import Error from '@/components/errors/Error';
 import File from '@/components/files/File';
 import FolderComponent from '@/components/files/Folder';
 import Loading from '@/components/ui/Loading';
@@ -8,6 +9,7 @@ import { Item } from '@/types/Entities'
 import { ItemContext, ItemContextPayload } from '@/types/ItemContext';
 import { FileRoles } from '@/types/Permissions';
 import { error } from 'console';
+import { usePathname } from 'next/navigation';
 import React, { createContext, ReactNode, use, useContext, useEffect, useReducer, useState } from 'react'
 
 const initialContextPayload: ItemContextPayload = {
@@ -39,7 +41,8 @@ export type ActionFiles =
     {type: "SET_PREVIEW_LINK", payload: string} | 
     {type: "ADD_TO_ITEMS", payload: Item} | 
     {type: "REMOVE_FROM_ITEMS", payload: number} | 
-    {type: "RENAME_FROM_ITEMS", payload: {id: number, name: string}}
+    {type: "RENAME_FROM_ITEMS", payload: {id: number, name: string}} |
+    {type: "RESET", payload: null}
 
 const action = (state: ItemContextPayload, {type, payload}: ActionFiles): ItemContextPayload => {
     switch(type){
@@ -87,12 +90,21 @@ const action = (state: ItemContextPayload, {type, payload}: ActionFiles): ItemCo
                 return item;
             });
             return {...state, item: {...state.item, storedFiles: mappedFileList}}
+        
+        case "RESET":
+            return initialContext;
     }
 }
 
 const Layout = ({children}: {children: ReactNode}) => {
 
     const [state, dispatch] = useReducer(action, initialContextPayload);
+
+    if (state.error){
+        return <Error message={state.error}/>
+    }
+
+    console.log(state);
 
     return (
         <ItemProvider.Provider value={{...state, dispatch}}>

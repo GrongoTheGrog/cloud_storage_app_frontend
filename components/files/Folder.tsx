@@ -15,10 +15,11 @@ import { Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
 import { ChangeEvent, use, useCallback, useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import { FaFilter, FaFolderPlus, FaTrash, FaUpload } from 'react-icons/fa6';
+import { FaFilter, FaFolderPlus, FaPaste, FaTrash, FaUpload } from 'react-icons/fa6';
 import { useFilter } from '@/context/FilterContext';
 import FilterDisplay from '../ui/FilterDisplay';
 import { useItem } from '@/app/(items)/layout';
+import { getFileFromClipboard } from '@/lib/clipboard';
 
 type Props = {
     rightBar?: boolean;
@@ -67,6 +68,34 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
         setFilteredItems(filter(items));
     }, [filterObject, items])
 
+    const pasteItemAction = useCallback(async () => {
+        try{
+            if (!item) return;
+            const blob: Blob = await getFileFromClipboard();
+            const action = (fileName: string) => {
+                const file = new File([blob], fileName);
+                postFile(file, item.id.toString());
+            }
+            popup.activate({
+                title: "Name",
+                subtitle: "Give your file a name.",
+                mainText: "Name the file you are pasting.",
+                type: "WARNING",
+                format: "INPUT",
+                action
+            })
+        }catch(err: unknown | Error){
+            if (err instanceof Error){
+               toast.setToast({
+                    message: err.message,
+                    status: null,
+                    type: 'ERROR'
+                }) 
+            }
+            
+        }
+    }, [item?.id])
+
 
     const createFolderAction = useCallback((folderName: string) => {
         const parentId = item?.id || null;
@@ -77,17 +106,6 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
         .catch(err => throwAxiosError(err, toast));
 
     }, [popup, item])
-
-    const postFileAction = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!item) return;
-        postFile(e.target.files, item.id ? item.id.toString() : "root")
-            .then(file => {
-                if (file){
-                    setItems(prev => [...prev, file])
-                }
-            }
-        )
-    }
 
     useEffect(() => {
         setItems(item?.storedFiles || []);
@@ -107,11 +125,20 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
                                 Upload file 
                                 <FaUpload/>
                             </label>
-                            <input id='file' type="file" hidden onChange={postFileAction} />
+                            <input id='file' type="file" hidden onChange={e => {
+                                if (!item?.id) return;
+                                postFile(e.target.files?.item(0), item!.id.toString());
+                                }} 
+                            />
 
-                            <MainButton size='SMALL' onClick={() => createFolderPopup(createFolderAction)}>
+                            <MainButton size='SMALL' centered onClick={() => createFolderPopup(createFolderAction)}>
                                 <span>Add folder</span>
                                 <FaFolderPlus/>
+                            </MainButton>
+
+                            <MainButton size='SMALL' centered onClick={() => pasteItemAction()}>
+                                <span>Paste</span>
+                                <FaPaste/>
                             </MainButton>
                         </div>}
                         
@@ -124,7 +151,7 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
                             </MainButton>}
 
                             {selectedItems.size === 1 &&
-                            <MainButton submit={false} centered size='SMALL' onClick={() => renameItemPopup(selectedItems.values().toArray()[0])}>
+                            <MainButton submit={false} centered size='SMALL' onClick={() => renameItemPopup(Array.from(selectedItems.values())[0])}>
                                 <span>Rename file</span>
                                 <FaEdit/>
                             </MainButton>

@@ -5,7 +5,7 @@ import { Item } from '@/types/Entities';
 import { FileRoles } from '@/types/Permissions';
 import { throwAxiosError } from '@/utils/forms';
 import { isAxiosError } from 'axios';
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect, useMemo } from 'react'
 
 
 const useGetFolder = (itemId: string) => {
@@ -13,7 +13,7 @@ const useGetFolder = (itemId: string) => {
     const api = useAxiosPrivate();
     const toast = useToast();
     const {dispatch} = useItem();
-
+    
     useEffect(() => {
         const fetch = async () => {
             try{
@@ -32,7 +32,7 @@ const useGetFolder = (itemId: string) => {
         }
 
         fetch();
-    }, [])
+    }, [itemId])
 
 }
 

@@ -9,7 +9,7 @@ import usePreviewLink from '@/hooks/fileHooks/file/usePreviewLink';
 import { Item } from '@/types/Entities';
 import { throwAxiosError } from '@/utils/forms';
 import { link } from 'fs';
-import React, { use, useCallback, useEffect, useState } from 'react'
+import React, { use, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { FaDownload, FaUpload } from 'react-icons/fa6';
 import { ChangeEvent } from 'react';
 import RightBar from '@/components/files/RightBar';
@@ -20,7 +20,7 @@ import { useItem } from '@/app/(items)/layout';
 
 const FileComponent = () => {
 
-    const {item, error, filePreviewLink} = useItem();
+    const {item, error, filePreviewLink, dispatch} = useItem();
 
     const toast = useToast();
 
@@ -42,15 +42,12 @@ const FileComponent = () => {
             document.body.removeChild(link);
         })
         .catch(err => {
-            console.log(err);
             throwAxiosError(err, toast)
         })
     }, [item])
 
     const postFileAction = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        console.log("check1")
         if (!item) return;
-        console.log("check2")
         postFile(e.target.files, item.id)
             .catch(err => throwAxiosError(err, toast))
     }, [item])

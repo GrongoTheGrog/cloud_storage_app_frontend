@@ -1,7 +1,9 @@
-import React, { Dispatch, SetStateAction, useCallback } from 'react'
+"use client"
+
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FaCalendar, FaDatabase, FaFile, FaFolder, FaTrash, FaUser } from 'react-icons/fa6'
-import { Item } from '@/types/Entities'
+import { Folder, Item } from '@/types/Entities'
 import { useMemo } from 'react'
 import { formatSize } from '@/lib/FileFunctions'
 import TextSk from '../skelletons/TextSk'
@@ -20,6 +22,7 @@ import { useItem } from '@/app/(items)/layout'
 const ItemHeader = () => {
 
     const {item, dispatch} = useItem();
+    const [folders, setFolders] = useState<Folder[]>([]);
     const toast = useToast();
     const router = useRouter();
 
@@ -38,16 +41,24 @@ const ItemHeader = () => {
         });
    }, [item])
 
-    const folders = useMemo(() => {
+    const getFolders = useCallback(() => {
         const folders = [];
         let current = item;
         let i = 0;
-        while(current && current.id && i < 3){
+        while(current && current.id && i < window.innerWidth / 300){
             folders.unshift(current);
             current = current.folder;
             i++
         }
-        return folders;
+        setFolders(folders);
+    }, [item])
+
+    useEffect(() => {
+        getFolders();
+        window.addEventListener("resize", getFolders);
+        return () => {
+            window.removeEventListener("resize", getFolders);
+        }
     }, [item])
 
     const size = useMemo(() => {
@@ -62,7 +73,7 @@ const ItemHeader = () => {
                         <FaFolder className='size-[25px] sm:size-[25px]'/>
                     </Link>
 
-                    {folders.length < 3 ? null : 
+                    {folders.length < 4 ? null : 
                     <Link href={"/folders/root"}>
                         /...
                     </Link>}
@@ -92,7 +103,7 @@ const ItemHeader = () => {
                     <TextSk text={item?.name} className='text-[28px] font-bold'/>
                 </div>
 
-                <div className='flex mt-[10px] sm:mt-0 flex-col sm:flex-row gap-x-[15px] sm:gap-x-[40px] gap-y-[4px] w-full sm:w-fit sm:gap-y-[20px] items-center text-[15px]'>
+                <div className='flex mt-[10px] sm:mt-0 flex-col sm:flex-row gap-x-[15px] sm:gap-x-[30px] gap-y-[4px] w-full sm:w-fit sm:gap-y-[20px] items-center text-[15px]'>
                     <div className='metadata-info'>
                         <span className='flex items-center gap-2'><FaDatabase size={14}/> size:</span>
                         <TextSk text={formatSize(item?.size)}/>
