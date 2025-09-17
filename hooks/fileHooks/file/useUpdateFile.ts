@@ -1,7 +1,7 @@
 import React from 'react'
 
-import useAxiosPrivate from '../useAxiosPrivate'
-import { useToast } from '../contextHooks'
+import useAxiosPrivate from '../../useAxiosPrivate'
+import { useToast } from '../../contextHooks'
 import { throwAxiosError } from '@/utils/forms'
 import { File } from '@/types/Entities'
 

@@ -10,6 +10,7 @@ export interface User {
 export interface Tag {
     user: User;
     name: string;
+    description: string;
     id: number;
     hex_color: string;
 }
@@ -17,6 +18,13 @@ export interface Tag {
 export interface TagJoin {
     id: number;
     tag: Tag
+}
+
+export interface SharedItem {
+    id: number,
+    item: Item,
+    owner: User,
+    user: User
 }
 
 export interface Item {
@@ -33,6 +41,7 @@ export interface Item {
     storedFiles: Item[];
     fileType: MediaType
     tagJoins: TagJoin[]
+    sharedItems: SharedItem[]
 
 }
 

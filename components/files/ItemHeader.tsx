@@ -1,76 +1,69 @@
-import React, { Dispatch, SetStateAction, useCallback } from 'react'
+"use client"
+
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FaCalendar, FaDatabase, FaFile, FaFolder, FaTrash, FaUser } from 'react-icons/fa6'
-import { Item } from '@/types/Entities'
+import { Folder, Item } from '@/types/Entities'
 import { useMemo } from 'react'
 import { formatSize } from '@/lib/FileFunctions'
 import TextSk from '../skelletons/TextSk'
 import { IconType } from 'react-icons'
 import { formatDateHour } from '@/lib/time'
 import UserImage from '../user/UserImage'
-import useRenameFile, { useRenameFilePopup } from '@/hooks/fileHooks/useRenameFile'
+import useRenameFilePopup from '@/hooks/fileHooks/file/useRenameFile'
 import { throwAxiosError } from '@/utils/forms'
 import { useToast } from '@/hooks/contextHooks'
 import MainButton from '../buttons/MainButton'
-import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/useDeleteFile'
+import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/file/useDeleteFile'
 import { useRouter } from 'next/navigation'
 import { FaEdit } from 'react-icons/fa'
+import { useItem } from '@/app/(items)/layout'
+import { userHasPermission } from '@/lib/permission'
 
-type Props = {
-    item: Item | undefined | null,
-    setItem: Dispatch<SetStateAction<Item | undefined>>
-}
+const ItemHeader = () => {
 
-const ItemHeader = (props: Props) => {
-
-    const {item, setItem} = props;
+    const {item, dispatch} = useItem();
+    const [folders, setFolders] = useState<Folder[]>([]);
     const toast = useToast();
     const router = useRouter();
 
     const deleteFile = useDeleteFile();
     const deleteFilePopup = useDeletePopup()
 
-    const rename = useRenameFile();
     const renamePopup = useRenameFilePopup();
 
-    
+    const checkPermission = userHasPermission();
 
-    const renameAction = useCallback((newName: string) => {
-        rename(item?.id, newName)
-        .then(() => {
-            setItem(prev => {
-                console.log(prev)
-                if (prev){
-                    return {...prev, name: newName};
-                }
-                return prev;
-            })
-        })
-        .catch(err => {
-            throwAxiosError(err, toast)
-            console.error(err);
-        })
-   }, [item, setItem])
 
    const deleteAction = useCallback(() => {
         if (!item) return;
         deleteFile(new Set([item?.id]))
-        .then(() => router.back())
+        .then(() => {
+            router.back()
+        })
         .catch(err => {
             throwAxiosError(err, toast);
         });
    }, [item])
 
-    const folders = useMemo(() => {
+    const getFolders = useCallback(() => {
         const folders = [];
         let current = item;
         let i = 0;
-        while(current && current.id && i < 3){
+        while(current && current.id && i < window.innerWidth / 300){
             folders.unshift(current);
             current = current.folder;
             i++
         }
-        return folders;
+        setFolders(folders);
+    }, [item])
+
+    useEffect(() => {
+        getFolders();
+        window.addEventListener("resize", getFolders);
+        return () => {
+            window.removeEventListener("resize", getFolders);
+        }
     }, [item])
 
     const size = useMemo(() => {
@@ -79,13 +72,13 @@ const ItemHeader = (props: Props) => {
 
     return (
         <div className='flex flex-col gap-4'>
-            <div className='flex justify-between'>
+            <div className='flex flex-col-reverse sm:flex-row gap-y-[15px] justify-between'>
                 <div className='flex sm:gap-[30px] gap-[15px] items-center text-[18px] sm:text-[25px font-bold] font-medium'>
                     <Link href={"/folders/root"}>
                         <FaFolder className='size-[25px] sm:size-[25px]'/>
                     </Link>
 
-                    {folders.length < 3 ? null : 
+                    {folders.length < 4 ? null : 
                     <Link href={"/folders/root"}>
                         /...
                     </Link>}
@@ -98,13 +91,13 @@ const ItemHeader = (props: Props) => {
                 </div>    
 
                 {item?.id && <div className='flex gap-3'>
-                    <MainButton size='SMALL' className='!min-w-0' color='RED' background onClick={() => deleteFilePopup(deleteAction)}>
+                    {checkPermission("DELETE") && <MainButton size='SMALL' className='!min-w-0' color='RED' background onClick={() => deleteFilePopup(deleteAction)}>
                         <FaTrash/>
-                    </MainButton>
+                    </MainButton>}
 
-                    <MainButton size='SMALL' className='!min-w-0' onClick={() => renamePopup(renameAction)}>
+                    {checkPermission("UPDATE") && <MainButton size='SMALL' className='!min-w-0' onClick={() => renamePopup(item.id)}>
                         <FaEdit/>
-                    </MainButton>
+                    </MainButton>}
                 </div>}
             </div>
             
@@ -115,7 +108,7 @@ const ItemHeader = (props: Props) => {
                     <TextSk text={item?.name} className='text-[28px] font-bold'/>
                 </div>
 
-                <div className='flex mt-[10px] sm:mt-0 flex-col sm:flex-row gap-x-[15px] sm:gap-x-[40px] gap-y-[4px] w-full sm:w-fit sm:gap-y-[20px] items-center text-[15px]'>
+                <div className='flex mt-[10px] sm:mt-0 flex-col sm:flex-row gap-x-[15px] sm:gap-x-[30px] gap-y-[4px] w-full sm:w-fit sm:gap-y-[20px] items-center text-[15px]'>
                     <div className='metadata-info'>
                         <span className='flex items-center gap-2'><FaDatabase size={14}/> size:</span>
                         <TextSk text={formatSize(item?.size)}/>
@@ -131,7 +124,7 @@ const ItemHeader = (props: Props) => {
                         <TextSk text={item.fileType}/>
                     </div>}
 
-                    {(item != null && !item.name) && <div className='metadata-info'>
+                    {(item != null && item.id) && <div className='metadata-info'>
                         <span className='flex items-center gap-2'><FaCalendar size={14}/> Last modified:</span>
                         <TextSk text={formatDateHour(item?.updated_at)}/>
                     </div>}

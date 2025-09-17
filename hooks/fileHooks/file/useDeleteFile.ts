@@ -1,8 +1,8 @@
 import React from 'react'
-import useAxiosPrivate from '../useAxiosPrivate'
-import { useToast } from '../contextHooks';
+import useAxiosPrivate from '../../useAxiosPrivate'
+import { useToast } from '../../contextHooks';
 import { throwAxiosError } from '@/utils/forms';
-import usePopup from '../usePopup';
+import usePopup from '../../usePopup';
 
 const useDeleteFile = () => {
 
@@ -32,6 +32,7 @@ const useDeleteFile = () => {
             })
         }catch(err){
             throwAxiosError(err, toast);
+            throw new Error("");
         }
     }
 }

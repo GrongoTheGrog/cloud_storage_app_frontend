@@ -1,15 +1,16 @@
-import useAxiosPrivate from '../useAxiosPrivate'
-import { useToast } from '../contextHooks'
+import useAxiosPrivate from '../../useAxiosPrivate'
+import { useToast } from '../../contextHooks'
 import { throwAxiosError } from '@/utils/forms'
-import { File } from '@/types/Entities'
+import { useItem } from '@/app/(items)/layout'
 
 const usePostFile = () => {
     const api = useAxiosPrivate();
     const toast = useToast();
+    const {dispatch} = useItem();
     
-    return async (fileList: FileList | null, folderIdString: string) => {
+    return async (file: File | null | undefined, folderIdString: string) => {
         const folderId = folderIdString === "root" ? null : folderIdString;
-        if (!fileList || fileList.length === 0) {
+        if (!file) {
             toast.setToast({
                 message: "User must select a file",
                 status: null,
@@ -17,10 +18,6 @@ const usePostFile = () => {
             })
             return;
         }
-
-        const file = fileList.item(0);
-
-        if (!file) return;
 
         const formData = new FormData();
         formData.append("file", file);
@@ -43,8 +40,7 @@ const usePostFile = () => {
                 type: "SUCCESS"
             })
 
-            return file.data;
-
+            dispatch({type: "ADD_TO_ITEMS", payload: file.data})
         }catch(err){
             throwAxiosError(err, toast);
         }

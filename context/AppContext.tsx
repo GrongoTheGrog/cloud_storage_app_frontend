@@ -5,6 +5,7 @@ import AuthProvider from './AuthProvider'
 import ToastProvider from './ToastProvider'
 import axios from '@/lib/axios'
 import PopupProvider from './PopupProvider'
+import FilterContextProvider from './FilterContext'
 
 const AppContext = ({children}: React.PropsWithChildren) => {
 
@@ -12,7 +13,9 @@ const AppContext = ({children}: React.PropsWithChildren) => {
         <ToastProvider>
             <AuthProvider>
                 <PopupProvider>
-                    {children}
+                    <FilterContextProvider>
+                        {children}
+                    </FilterContextProvider>
                 </PopupProvider>
             </AuthProvider>
         </ToastProvider>
