@@ -63,7 +63,7 @@ const FileCard = ({item, selected, onClick}: {item: Item, selected?: boolean, on
                     </span>
                 </div>
 
-                <Tags item={item} className='!hidden sm:flex'/>
+                <Tags className='!hidden sm:flex'/>
             </div>
         </div>
     )
