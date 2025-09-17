@@ -20,6 +20,7 @@ import { useFilter } from '@/context/FilterContext';
 import FilterDisplay from '../ui/FilterDisplay';
 import { useItem } from '@/app/(items)/layout';
 import { getFileFromClipboard } from '@/lib/clipboard';
+import { userHasPermission } from '@/lib/permission';
 
 type Props = {
     rightBar?: boolean;
@@ -40,6 +41,8 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
 
     const toast = useToast();
     const popup = usePopup();
+
+    const checkPermission = userHasPermission();
 
     const postFile = usePostFile();
 
@@ -121,36 +124,38 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
                     <div className="static flex gap-2 justify-between items-baseline bg-background p-2 rounded-[20px] mt-2">
 
                         {createItems && <div className='flex gap-2 sm:flex-row flex-col w-fit'>
-                            <label htmlFor='file' className='button !border-1 h-full text-center !py-[3px] flex gap-2 items-center justify-center !text-[14px]'>
-                                Upload file 
-                                <FaUpload/>
-                            </label>
-                            <input id='file' type="file" hidden onChange={e => {
-                                if (!item?.id) return;
-                                postFile(e.target.files?.item(0), item!.id.toString());
-                                }} 
-                            />
+                            {checkPermission("UPDATE") && <>
+                                <label htmlFor='file' className='button !border-1 h-full text-center !py-[3px] flex gap-2 items-center justify-center !text-[14px]'>
+                                    Upload file 
+                                    <FaUpload/>
+                                </label>
+                                <input id='file' type="file" hidden onChange={e => {
+                                    if (!item?.id) return;
+                                    postFile(e.target.files?.item(0), item!.id.toString());
+                                    }} 
+                                />
+                            </>}
 
-                            <MainButton size='SMALL' centered onClick={() => createFolderPopup(createFolderAction)}>
+                            {checkPermission("UPDATE") && <MainButton size='SMALL' centered onClick={() => createFolderPopup(createFolderAction)}>
                                 <span>Add folder</span>
                                 <FaFolderPlus/>
-                            </MainButton>
+                            </MainButton>}
 
-                            <MainButton size='SMALL' centered onClick={() => pasteItemAction()}>
+                            {checkPermission("UPDATE") && <MainButton size='SMALL' centered onClick={() => pasteItemAction()}>
                                 <span>Paste</span>
                                 <FaPaste/>
-                            </MainButton>
+                            </MainButton>}
                         </div>}
                         
 
                         {updateItems && <div className='flex flex-col gap-2 sm:flex-row'>
-                            {selectedItems.size > 0 && 
+                            {selectedItems.size > 0 && checkPermission("DELETE") && 
                             <MainButton submit={false} className='h-fit' onClick={() => deleteFilesPopup(deleteFileAction)} size='SMALL' centered color='RED' background>
                                 <span>Delete file{selectedItems.size > 1 ? "s" : ""}</span> 
                                 <FaTrash/>
                             </MainButton>}
 
-                            {selectedItems.size === 1 &&
+                            {selectedItems.size === 1 && checkPermission("UPDATE") && 
                             <MainButton submit={false} centered size='SMALL' onClick={() => renameItemPopup(Array.from(selectedItems.values())[0])}>
                                 <span>Rename file</span>
                                 <FaEdit/>
@@ -190,7 +195,7 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
                 </div>
             </section>
 
-            {rightBar && <RightBar/>}
+            {item?.id && rightBar && <RightBar/>}
 
         </section>
     )

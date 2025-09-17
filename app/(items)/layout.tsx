@@ -99,12 +99,15 @@ const action = (state: ItemContextPayload, {type, payload}: ActionFiles): ItemCo
 const Layout = ({children}: {children: ReactNode}) => {
 
     const [state, dispatch] = useReducer(action, initialContextPayload);
+    const pathName = usePathname();
+
+    useEffect(() => {
+        dispatch({type: "RESET", payload: null});
+    }, [pathName])
 
     if (state.error){
         return <Error message={state.error}/>
     }
-
-    console.log(state);
 
     return (
         <ItemProvider.Provider value={{...state, dispatch}}>

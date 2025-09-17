@@ -10,14 +10,20 @@ import Toast from '@/components/ui/Toast';
 import { useToast } from '@/hooks/contextHooks';
 import TagGridEditing from './TagGridEditing';
 import TagGridNormal from './TagGridNormal';
+import { useItem } from '@/app/(items)/layout';
+import { userHasPermission } from '@/lib/permission';
 
-const Tags = ({item, className}: {item: Item | null | undefined, className?: string}) => {
+const Tags = ({className}: {className?: string}) => {
 
     const [userTags, setUserTags] = useState<Tag[]>([]);
     const [selected, setSelected] = useState<Set<number>>(new Set());
 
     const [creating, setCreating] = useState(false);
     const [editing, setEditing] = useState(false);
+
+    const {item} = useItem();
+
+    const checkPermission = userHasPermission();
 
     const toast = useToast();
     const fetchTags = useFetchTags();
@@ -31,11 +37,11 @@ const Tags = ({item, className}: {item: Item | null | undefined, className?: str
         fetchTags()
         .then(tags => setUserTags(tags))
         .catch(err => throwAxiosError(err, toast))
-    }, [item?.tagJoins])
+    }, [])
 
     return (
         <div className={'flex flex-col gap-3 text-[14px] rounded-[5px] p-3 ' + className}>
-            <MainButton submit={false} centered size='SMALL' onClick={() => setEditing(prev => !prev)}>
+            {checkPermission("UPDATE") && <MainButton submit={false} centered size='SMALL' onClick={() => setEditing(prev => !prev)}>
 
                 {editing ? (
                     <>
@@ -47,7 +53,7 @@ const Tags = ({item, className}: {item: Item | null | undefined, className?: str
                     </>
                 )}
                 
-            </MainButton>
+            </MainButton>}
 
             {
                 editing ?

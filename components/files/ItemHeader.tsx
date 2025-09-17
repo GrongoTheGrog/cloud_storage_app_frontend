@@ -18,6 +18,7 @@ import useDeleteFile, { useDeletePopup } from '@/hooks/fileHooks/file/useDeleteF
 import { useRouter } from 'next/navigation'
 import { FaEdit } from 'react-icons/fa'
 import { useItem } from '@/app/(items)/layout'
+import { userHasPermission } from '@/lib/permission'
 
 const ItemHeader = () => {
 
@@ -31,11 +32,15 @@ const ItemHeader = () => {
 
     const renamePopup = useRenameFilePopup();
 
+    const checkPermission = userHasPermission();
+
 
    const deleteAction = useCallback(() => {
         if (!item) return;
         deleteFile(new Set([item?.id]))
-        .then(() => router.back())
+        .then(() => {
+            router.back()
+        })
         .catch(err => {
             throwAxiosError(err, toast);
         });
@@ -86,13 +91,13 @@ const ItemHeader = () => {
                 </div>    
 
                 {item?.id && <div className='flex gap-3'>
-                    <MainButton size='SMALL' className='!min-w-0' color='RED' background onClick={() => deleteFilePopup(deleteAction)}>
+                    {checkPermission("DELETE") && <MainButton size='SMALL' className='!min-w-0' color='RED' background onClick={() => deleteFilePopup(deleteAction)}>
                         <FaTrash/>
-                    </MainButton>
+                    </MainButton>}
 
-                    <MainButton size='SMALL' className='!min-w-0' onClick={() => renamePopup(item.id)}>
+                    {checkPermission("UPDATE") && <MainButton size='SMALL' className='!min-w-0' onClick={() => renamePopup(item.id)}>
                         <FaEdit/>
-                    </MainButton>
+                    </MainButton>}
                 </div>}
             </div>
             

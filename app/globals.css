@@ -212,11 +212,16 @@ body {
   }
 
   .tag-delete-button{
-    @apply opacity-100 sm:opacity-0 absolute top-[6px] right-[6px] cursor-pointer transition-opacity duration-150 ease-in
+    @apply opacity-100 sm:opacity-0 absolute top-[6px] right-[6px] cursor-pointer transition-opacity duration-150 ease-in z-10
   }
+
 
   @media screen and (min-width: 768px) {
     .tag-editing-card:hover > .tag-delete-button{
+      opacity: 1;
+    }
+
+    .share-editing-card:hover > .tag-delete-button{
       opacity: 1;
     }
   }

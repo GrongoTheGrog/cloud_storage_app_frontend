@@ -20,13 +20,13 @@ const Header = () => {
 
 
     return (
-        <div className='fixed left-0 right-0 top-0 h-fit p-[20px] px-[40px] flex items-end bg-background z-10' onClick={() => setShowPanel(prev => !prev)}>
+        <div className='fixed left-0 right-0 top-0 h-fit p-[20px] px-[40px] flex items-end bg-background z-10'>
 
             <Link href={"/folders/root"} className='font-bold text-[30px]'>
                 Root
             </Link>
 
-            <div className='ml-auto flex h-fit gap-5 items-center cursor-pointer'>
+            <div className='ml-auto flex h-fit gap-5 items-center cursor-pointer' onClick={() => setShowPanel(prev => !prev)}>
 
                 {auth.auth?.id && (
                     <>
