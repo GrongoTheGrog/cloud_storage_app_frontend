@@ -14,10 +14,10 @@ const page = () => {
     const api = useAxiosPrivate();
     const toast = useToast();
     const authContext = useAuth();
-    const searchParams = useSearchParams();
     const fetchCookie = useFetchRefreshId();
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
         const username = searchParams.get("username");
         const id = searchParams.get("id");
         const picture = searchParams.get("picture");
@@ -45,8 +45,6 @@ const page = () => {
             router.push("/login");
             return;
         }
-
-        console.log(authContext.auth)
 
         router.push("/");
 

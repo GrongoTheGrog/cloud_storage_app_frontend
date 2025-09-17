@@ -1,7 +1,9 @@
 
+"use client"
+
 import { useAuth, useToast } from '@/hooks/contextHooks';
-import axios, { axiosPrivate } from '@/lib/axios';
-import React, { useEffect } from 'react'
+import { axiosPrivate } from '@/lib/axios';
+import { useEffect } from 'react'
 import useRefreshToken from './authHooks/useRefreshToken';
 import { useRouter } from 'next/navigation';
 
@@ -18,7 +20,7 @@ const useAxiosPrivate = () => {
             async config => {
                 const accessToken = auth?.accessToken;
 
-                const cookie = await window.cookieStore.get("XSRF-TOKEN");
+                const cookie = await (window as any).cookieStore.get("XSRF-TOKEN");
                 const csrf = cookie;
                 if (!config.headers.Authorization) {
                     config.headers.Authorization = `Bearer ${accessToken}`;
