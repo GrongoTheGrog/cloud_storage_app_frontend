@@ -39,3 +39,4 @@ jobs:
           echo "ServerAliveInterval 60" >> ~/.ssh/config
           echo "ServerAliveCountMax 5" >> ~/.ssh/config
           npm run build || npm start &
+        EOF
