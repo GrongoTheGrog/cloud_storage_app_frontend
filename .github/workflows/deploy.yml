@@ -40,5 +40,5 @@ jobs:
           echo "ServerAliveCountMax 5" >> ~/.ssh/config
           npm ci
           npm run build
-          npm start &
+          pm2 start npm --name "root-frontend-app" -- start
         EOF
