@@ -22,19 +22,19 @@ jobs:
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.secrets.EC2_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
     - name: Push files to EC2
       run: |
-        rsync -avz --delete ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/app
+        rsync -avz --delete ./ ${{ secrets.secrets.EC2_USER }}@${{ secrets.secrets.EC2_HOST }}:/home/${{ secrets.secrets.EC2_USER }}/app
 
     - name: Restart Nginx and App
       run: |
-        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          sudo cp /home/${{ secrets.EC2_USER }}/app/nginx.conf /etc/nginx/sites-available/default
+        ssh ${{ secrets.secrets.EC2_USER }}@${{ secrets.secrets.EC2_HOST }} << 'EOF'
+          sudo cp /home/${{ secrets.secrets.EC2_USER }}/app/nginx.conf /etc/nginx/sites-available/default
           sudo nginx -t && sudo systemctl restart nginx
-          cd /home/${{ secrets.EC2_USER }}/app
+          cd /home/${{ secrets.secrets.EC2_USER }}/app
           npm run build || npm start &
         EOF
