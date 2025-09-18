@@ -38,5 +38,7 @@ jobs:
           cd /home/${{ secrets.EC2_USER }}/app
           echo "ServerAliveInterval 60" >> ~/.ssh/config
           echo "ServerAliveCountMax 5" >> ~/.ssh/config
-          npm run build || npm start &
+          npm ci
+          npm run build
+          npm start &
         EOF
