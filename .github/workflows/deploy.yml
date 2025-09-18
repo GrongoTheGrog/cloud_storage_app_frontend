@@ -38,6 +38,7 @@ jobs:
           cd /home/${{ secrets.EC2_USER }}/app
           echo "ServerAliveInterval 60" >> ~/.ssh/config
           echo "ServerAliveCountMax 5" >> ~/.ssh/config
+          npm i pm2
           npm ci
           npm run build
           pm2 start npm --name "root-frontend-app" -- start
