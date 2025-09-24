@@ -58,3 +58,10 @@ jobs:
           npm run build
           pm2 start npm --name "root-frontend-app" -- start
         EOF
+
+    - name: Save node_modules cache
+      if: success()
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
