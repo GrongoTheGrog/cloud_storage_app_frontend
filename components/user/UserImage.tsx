@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 
 const UserImage = ({className, src, height, width, children}: {className?: string, src: string | null | undefined, height?: number, width?: number, children?: ReactNode}) => {
 
-    const image = (src == "" || !src) ? "/user.webp" : src;
+    const image = (src == "" || !src) ? "/user.png" : src;
 
     return (
         <div className='relative'>
