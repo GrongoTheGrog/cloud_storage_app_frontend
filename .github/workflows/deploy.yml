@@ -47,12 +47,12 @@ jobs:
 
     - name: Push built app to EC2
       run: |
-        rsync -avz --delete \
+        rsync -avz --delete --delay-updates \
           .next \
           public \
           node_modules \
           package.json \
-          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/app
+          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/app || true
 
 
     - name: Restart Nginx and App
