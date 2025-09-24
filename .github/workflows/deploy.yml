@@ -38,6 +38,8 @@ jobs:
           cd /home/${{ secrets.EC2_USER }}/app
           echo "ServerAliveInterval 60" >> ~/.ssh/config
           echo "ServerAliveCountMax 5" >> ~/.ssh/config
+          export NEXT_PUBLIC_BACKEND_URL=${{ secrets.BACKEND_URL }}
+          export NEXT_PUBLIC_DOMAIN=${{ secrets.FRONTEND_URL }}
           npm i pm2
           pm2 stop all
           pm2 delete all
