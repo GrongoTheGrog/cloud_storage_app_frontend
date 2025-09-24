@@ -20,13 +20,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Cache node modules
+    - name: Cache node_modules
       uses: actions/cache@v3
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        path: node_modules
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-modules-
 
     - name: Setup SSH
       run: |
@@ -52,7 +52,7 @@ jobs:
           pm2 stop all
           pm2 delete all
           pm2 kill
-          npm ci
+          npm install
           NEXT_PUBLIC_BACKEND_URL="${{ secrets.BACKEND_URL }}" \
           NEXT_PUBLIC_DOMAIN="${{ secrets.FRONTEND_URL }}" \
           npm run build
