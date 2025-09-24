@@ -14,7 +14,7 @@ const useCreateFolder = () => {
             type: "WARNING"
         })
         
-        const response = await api.post("api/folders", {
+        const response = await api.post("/api/folders", {
             parentFolderId, 
             name
         });
