@@ -21,7 +21,7 @@ const Oauth2Button = ({service}: {service: string}) => {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     const onClick = useCallback(() => {
-        router.push(backendUrl + "/api/auth/login/" + service.toLowerCase());
+        router.push(backendUrl + "/api/oauth2/login/" + service.toLowerCase());
     }, []);
 
     return (
