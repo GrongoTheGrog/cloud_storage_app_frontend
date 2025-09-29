@@ -2,9 +2,9 @@
 
 import useAxiosPrivate from '@/hooks/useAxiosPrivate';
 import { useAuth, useToast } from '@/hooks/contextHooks';
-import { AuthContextType, AuthType } from '@/types/AuthTypes';
+import { AuthType } from '@/types/AuthTypes';
 import axios from 'axios';
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import useFetchRefreshId from '@/hooks/authHooks/useFetchRefreshId';
 

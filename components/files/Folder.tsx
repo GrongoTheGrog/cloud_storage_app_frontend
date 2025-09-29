@@ -77,7 +77,7 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
             const blob: Blob = await getFileFromClipboard();
             const action = (fileName: string) => {
                 const file = new File([blob], fileName);
-                postFile(file, item.id.toString());
+                postFile(file, item.id ? item.id.toString() : "root");
             }
             popup.activate({
                 title: "Name",
@@ -130,8 +130,8 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
                                     <FaUpload/>
                                 </label>
                                 <input id='file' type="file" hidden onChange={e => {
-                                    if (!item?.id) return;
-                                    postFile(e.target.files?.item(0), item!.id.toString());
+                                    if (!item) return;
+                                    postFile(e.target.files?.item(0), item.id ? item?.id.toString() : "root");
                                     }} 
                                 />
                             </>}
