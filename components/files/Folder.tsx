@@ -77,7 +77,6 @@ const FolderComponent = ({rightBar = false, createItems = false, updateItems = f
             const blob: Blob = await getFileFromClipboard();
             const action = (fileName: string) => {
                 const file = new File([blob], fileName);
-                console.log(item);
                 postFile(file, item.id ? item.id.toString() : "root");
             }
             popup.activate({
